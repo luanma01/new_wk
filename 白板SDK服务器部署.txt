@@ -1,0 +1,15 @@
+1.IM服务
+国内:39.108.66.58:5080
+国外:47.90.47.68:5080
+
+2.接口服务
+国内:eclasssdkapi1.qiancloud.com(域名) 39.108.66.58:80（IP）
+国外:eclasssdkapi2.qiancloud.com(域名) 47.90.47.68:80（IP）
+
+3.教材(jpg)下载服务
+国内:eclasssdkdoc1.qiancloud.com(域名) 39.108.66.58:8080（IP）
+国外:eclasssdkdoc2.qiancloud.com(域名) 47.90.47.68:8080（IP）
+
+4.大文件上传服务
+国内:39.108.66.58:5560
+国外:47.90.47.68:5560
