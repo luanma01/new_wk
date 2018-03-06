@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title> New Document </title>
+  <meta charset="UTF-8">
+  <style>
+	*{padding:0;margin:0;box-sizing:border-box;}
+
+	.border{border:2px solid;}
+	.wid{width:100%;}
+
+	.box{
+		max-width:1000px;
+		height:460px;
+		position:fixed;
+		top:50%;
+		left:50%;
+		transform:translate(-50%,-50%);
+	}
+	.header{
+		height:30px;
+	}
+
+	.main{
+		display:flex;
+		justify-content:space-between;
+	}
+	.left{
+		width:700px;
+		height:430px;
+		display:flex;
+		flex-direction:column;
+		justify-content:space-between;
+		align-items:center;
+	}
+	.top{
+/*		height:30px;*/
+	}
+	.content{
+		width:400px;
+		max-width:400px;
+		height:400px;
+	}
+	.bottom{
+/*		height:30px;*/
+	}
+
+	.right{
+		width:200px;
+		height:430px;
+/*		flex-direction:column;*/
+/*		justify-content:space-between;*/
+/*		align-items:center;*/
+	}
+	.pannel{
+		height:100px;
+	}
+	.pn-3{
+		height:200px;
+	}
+	.pn-4{
+		height:30px;
+	}
+  </style>
+ </head>
+ <body>
+  <div class="box wid">
+	<div class="header border wid">header</div>
+
+	<div class="main wid">
+
+		<div class="left border">
+			<div class="lf-top border wid">top</div>
+			<div class="content border"></div>
+			<div class="lf-bottom border wid">bottom</div>
+		</div>
+
+		<div class="right border">
+			<div class="pannel pn-1 border">pn-1</div>
+			<div class="pannel pn-2 border">pn-2</div>
+			<div class="pn-3 border">pn-3</div>
+			<div class="pn-4 border">pn-4</div>
+		</div>
+
+	</div>
+
+  </div>
+
+  <script>
+	window.onresize=function(x,y){
+		x='47vw';
+		y='43vw';
+		let W=window.innerWidth;
+//		let LW=leftEl.computedWidth;
+//		console.log(LW);
+		if(W<900){
+//			console.log('window.width='+W);
+			let el=document.querySelector('.content');
+			el.style.backgroundColor='#ff0000';
+			el.style.width=x;
+			el.style.height=y;
+		}
+	}
+  </script>
+ </body>
+</html>
