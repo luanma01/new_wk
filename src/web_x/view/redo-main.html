@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/redomain.css">
+        <title> TO DO HTML </title>
+    </head>
+    <body>
+        <div class="main bd fullwid">
+            <div class="webclass fullwid">
+                <div class="roominfo bd fullwid">roominfo</div>
+
+                <div class="content bd fullwid">
+                    <section>
+                        <div class="left bd">
+                            <div class="top bd fullwid">
+                                <ul class="setting-list">
+                                    <li>刷新</li>
+                                    <li>适页</li>
+                                    <li>备注</li>
+                                </ul>                                
+                            </div>
+                            <div class="middle bd fullwid">
+                                <div class="paint-area bd"></div>
+                                <div class="page-btn page-left">
+                                    <div><</div>
+                                </div>
+                                <div class="page-btn page-right">
+                                    <div>></div>
+                                </div>
+                            </div>
+                            <div class="bottom bd fullwid">
+                                <div class="page-count">
+                                    <span> 1 </span>/12
+                                </div>
+                            </div>
+                        </div>
+                        <div class="toolbar bd"></div>
+                    </section>
+
+                    <aside>
+                        <div class="right bd">
+                            <div class="video bd">video1</div>
+                            <div class="video bd">video2</div>
+                            <div class="msg-pannel bd">massage</div>
+                            <div class="send-pannel bd fullwid">send</div>
+                        </div>
+                    </aside>
+                </div>
+                
+            </div>
+        </div>
+
+        <script>
+            window.onresize=function(){
+                // console.log('width:'+window.innerWidth);
+                const W=window.innerWidth;
+                let toolbar=document.querySelector('.toolbar');
+                if(W<1000){
+                    toolbar.style.right='0px';
+                }else if(W<=1040&&W>1000){
+                    let offsetR=1000-W;
+                    toolbar.style.right=offsetR+'px';
+                    // console.log('toolbar.right='+offsetR);
+                }else{
+                    toolbar.style.right='-40px';
+                }
+            }
+        </script>
+    </body>
+</html>

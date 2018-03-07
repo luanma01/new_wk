@@ -1,0 +1,147 @@
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address,cite,code,del,dfn,em,img,ins,kbd,q,samp,small,strong,sub,sup,var,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary,time,mark,audio,video {
+	margin:0;
+	padding:0;
+	/*border:0;
+	*/
+    /*outline:0;
+	*/
+    /*font-size:100%;
+	vertical-align:baseline;
+	background:transparent;
+    */
+}
+h1,h2,h3,h4,h5,h6,em,i {
+	font-weight:100;
+	font-style:normal;
+}
+ul,ol,li {
+	list-style-type:none;
+}
+a {
+	color:#666;
+	text-decoration:none;
+	outline:0;
+}
+a:hover {
+	text-decoration:none;
+}
+
+*{ box-sizing:border-box; }
+
+
+
+/* frequent class */
+.bd{ border:1px solid; }
+.fullwid{ width:100%; }
+
+/* viewable test */
+.main{
+    max-width:1200px;
+    /* min-width:400px; */
+    height:600px;
+    margin:40px auto;
+}
+.webclass{
+    
+}
+
+.roominfo{
+    
+    min-height:20px;
+    background:#85c0c0;
+}
+
+.content{
+    height:580px;
+    display:flex;
+    justify-content:space-between;
+    background:#f0f4fc;
+}
+
+section{
+    /* width:72%; */
+    width:750px;
+    position:relative;
+}
+.left{
+    height:100%;
+    min-height:400px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+}
+.top{
+    height:40px;
+    display:flex;
+    justify-content: flex-end;
+    align-items:center;
+}
+.setting-list{
+    width:220px;
+    display:flex;
+    justify-content: space-around;
+}
+.middle{
+    height:500px;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    position:relative;
+}
+.paint-area{
+    width:75vw;
+    height:50vw;
+    max-height:500px;
+    background:#cdbca3;
+}
+.page-btn{
+    position: absolute;
+    top: 50%;
+    cursor:pointer;
+}
+.page-left{
+    left: 10px;
+}
+.page-right{
+    right: 10px;
+}
+.bottom{
+    height:40px;
+    display:flex;
+    justify-content: flex-end;
+    align-items:center;
+    padding-right:20px;
+}
+.page-count{
+    /* display:flex;
+    justify-content:  */
+}
+.toolbar{
+    width:40px;
+    height:160px;
+    position:absolute;
+    right:-40px;
+    top:40px;
+}
+
+aside{
+    /* width:25%; */
+    width:250px;
+    position:relative;
+}
+.right{
+    height:100%;
+
+}
+.video{
+    height:11vw;
+}
+.msg-pannel{
+    height:calc(100% - 22vw - 75px);
+}
+.send-pannel{
+    height:75px;
+    position: absolute;
+    bottom:0;
+}
