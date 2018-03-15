@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <script type="text/javascript" src="http://www.w3school.com.cn/jquery/jquery.js "></script>
+    <style>
+        p{ margin:0; padding:0;}
+        img{ outline:none;width:30px;height:30px;}
+        #o{ width:300px!important; height:auto!important; border:1px solid #333;
+            overflow-x: hidden;word-wrap: break-word;outline:0px; min-height:220px;}
+    </style>
+    <script>
+        $(function(){
+            $('#btn').click(function(){
+                $('#o').focus();
+                var str="<img src='img1/1.png' width='191' height='259' />";//$(str).appendTo($('#o'));
+                _insertimg(str);
+            });
+            $('#t').click(function(){
+
+                $('#div1').html($('#o').html());
+            });
+
+            $('#ttbtn').click(function(){
+                alert($('#tt').val());
+            });
+            $("#img").click(function(){
+
+            });
+        });
+        //锁定编辑器中鼠标光标位置。。
+        function _insertimg(str){
+            var selection= window.getSelection ? window.getSelection() : document.selection;
+            var range= selection.createRange ? selection.createRange() : selection.getRangeAt(0);
+            if (!window.getSelection){
+                document.getElementById('o').focus();
+                var selection= window.getSelection ? window.getSelection() : document.selection;
+                var range= selection.createRange ? selection.createRange() : selection.getRangeAt(0);
+                range.pasteHTML(str);
+                range.collapse(false);
+                range.select();
+            }else{
+                document.getElementById('o').focus();
+                range.collapse(false);
+                var hasR = range.createContextualFragment(str);
+                var hasR_lastChild = hasR.lastChild;
+                while (hasR_lastChild && hasR_lastChild.nodeName.toLowerCase() === "br" && hasR_lastChild.previousSibling && hasR_lastChild.previousSibling.nodeName.toLowerCase() == "br") {
+                    var e = hasR_lastChild;
+                    hasR_lastChild = hasR_lastChild.previousSibling;
+                    hasR.removeChild(e)
+                }
+                range.insertNode(hasR);
+                if (hasR_lastChild) {
+                    range.setEndAfter(hasR_lastChild);
+                    range.setStartAfter(hasR_lastChild)
+                }
+                selection.removeAllRanges();
+                selection.addRange(range)
+            }
+        }
+        //监控粘贴(ctrl+v),如果是粘贴过来的东东，则替换多余的html代码，只保留<br>
+        function pasteHandler(){
+            setTimeout(function(){
+                var content = document.getElementById("o").innerHTML;
+                valiHTML=["br"];
+                content=content.replace(/_moz_dirty=""/gi, "").replace(/\[/g, "[[-").replace(/\]/g, "-]]").replace(/<\/ ?tr[^>]*>/gi, "[br]").replace(/<\/ ?td[^>]*>/gi, "&nbsp;&nbsp;").replace(/<(ul|dl|ol)[^>]*>/gi, "[br]").replace(/<(li|dd)[^>]*>/gi, "[br]").replace(/<p [^>]*>/gi, "[br]").replace(new RegExp("<(/?(?:" + valiHTML.join("|") + ")[^>]*)>", "gi"), "[$1]").replace(new RegExp('<span([^>]*class="?at"?[^>]*)>', "gi"), "[span$1]").replace(/<[^>]*>/g, "").replace(/\[\[\-/g, "[").replace(/\-\]\]/g, "]").replace(new RegExp("\\[(/?(?:" + valiHTML.join("|") + "|img|span)[^\\]]*)\\]", "gi"), "<$1>");
+                if(!/firefox/.test(navigator.userAgent.toLowerCase())){
+                    content=content.replace(/\r?\n/gi, "<br>");
+                }
+                document.getElementById("o").innerHTML=content;
+            },1)
+
+        }
+    </script>
+</head>
+
+<body>
+    <div id="o" contenteditable="true"></div>
+    <input type="button" value="查看" id="btn"/>
+    <div id="div1"></div>
+    <textarea id="tt" style="width:200px; height:200px;"></textarea>
+    <input type="button" id="ttbtn" value="测试">
+
+    <script type="text/javascript">
+        var edt = document.getElementById("o");
+        if(edt.addEventListener){
+            edt.addEventListener("paste",pasteHandler,false);
+        }else{
+            edt.attachEvent("onpaste",pasteHandler);
+        }
+    </script>
+</body>
+
+
+
+
+</html>
