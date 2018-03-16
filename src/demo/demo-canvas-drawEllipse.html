@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <canvas id="cvs" width="500" height="500"></canvas>
+</div>
+<script>
+    function drawElli(x, y, width, height) {
+        var k = (width/0.75)/2,
+            w = width/2,
+            h = height/2;
+        ctx.beginPath();
+        ctx.moveTo(x, y-h);
+        ctx.bezierCurveTo(x+k, y-h, x+k, y+h, x, y+h);
+        ctx.bezierCurveTo(x-k, y+h, x-k, y-h, x, y-h);
+        ctx.closePath();
+        return ctx;
+    }
+
+    let ctx = document.getElementById("cvs").getContext('2d');
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#000';
+    drawElli(150,80,300,180);
+    ctx.stroke();
+
+</script>
+</body>
+</html>
+
