@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        #box {
+            width: 200px;
+            height: 80px;
+            border: 1px solid crimson;
+            border-radius: 40px;
+        }
+
+        #process {
+            background: #2D93CA;
+            width: 100px;
+            height: 78px;
+            border-radius: 40px;
+        }
+
+        #process::after {
+            display: block;
+            content: '';
+            float:right;
+            border: 1px solid #009f95;
+            background: #2b542c;
+            border-radius: 50%;
+            height: 76px;
+            width: 76px;
+
+        }
+    </style>
+</head>
+<body>
+<div>
+    <form action="">
+
+        <div>
+            <input type="checkbox" id="isLocked" hidden>
+            <label for="isLocked" width="200">
+                <div id="box">
+                    <div id="process"></div>
+                </div>
+            </label>
+        </div>
+    </form>
+
+</div>
+<script src="../js/common/jquery.min.js"></script>
+<script>
+
+    onclick = function(){
+        let prop = $("input[type='checkbox']").prop('checked');
+        console.log(prop);
+        if(prop){
+            $("#process").stop().animate({width:200});
+        }else{
+            $("#process").stop().animate({width:80});
+        }
+
+    }
+</script>
+</body>
+</html>

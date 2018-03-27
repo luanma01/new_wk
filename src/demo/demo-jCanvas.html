@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="box">
+    <canvas id="cvs-cache"></canvas>
+    <canvas id="cvs"></canvas>
+</div>
+
+<script src="../js/common/jquery.min.js"></script>
+<script src="../js/jcanvas.min.js"></script>
+<script>
+    let $cvs = $('#cvs'),$cvs_cache = $('#cvs-cache');
+    let cvs = document.getElementById('cvs');
+    let cvs_cache = document.getElementById('cvs-cache');
+
+    cvs.width = 500;
+    cvs.height = 500;
+    cvs_cache.width = 500;
+    cvs_cache.height = 500;
+
+    $cvs.css({
+        // background:'#ccc',
+        position: 'absolute',
+        left: 0,
+        top: 0
+    });
+    $cvs_cache.css({
+        background:'#ccc',
+        position: 'absolute',
+        left: 0,
+        top: 0
+    });
+
+    //测试鼠标定位方式
+    $("#box").css({
+        margin:'0 auto',
+        position:'relative',
+        width:500,
+        height:500
+    });
+
+    let positionX,positionY,endX,endY,lastX,lastY,isPressed = false,layerNum = -1;
+    $cvs.on("mousedown",e=>{
+        isPressed = true;
+        positionX = e.offsetX;
+        positionY = e.offsetY;
+        lastX = positionX;
+        lastY = positionY;
+
+        console.log('begin:' + positionX + ',' + positionY);
+
+        let offset = $cvs.offset();
+        let x = e.pageX-offset.left;
+        let y = e.pageY-offset.top;
+
+        console.log('offset:' + x + ',' + y);
+        console.log('e.page:' + e.pageX);
+    });
+    $cvs.on("mousemove",e=>{
+        if(isPressed === true){
+            endX = e.offsetX;
+            endY = e.offsetY;
+            console.log('end:'+endX+','+endY);
+
+/*
+            //画椭圆
+            $cvs_cache.clearCanvas().drawEllipse({
+                strokeStyle: '#000',
+                strokeWidth: 1,
+                x: positionX + (endX - positionX)/2,
+                y: positionY + (endY - positionY)/2,
+                width: endX - positionX, height: endY - positionY,
+            });
+*/
+
+            //画自由线
+            $cvs.drawLine({
+                strokeStyle: '#000',
+                strokeWidth: 3,
+                rounded: true,
+                x1: lastX,
+                y1: lastY,
+                x2: endX,
+                y2: endY
+            });
+            lastX = endX;
+            lastY = endY;
+
+        }
+    });
+    $cvs.on("mouseup",e=>{
+        isPressed = false;
+/*
+        $cvs.drawEllipse({
+            strokeStyle: '#000',
+            strokeWidth: 10,
+            x: positionX + (endX - positionX)/2,
+            y: positionY + (endY - positionY)/2,
+            width: endX - positionX, height: endY - positionY,
+        });
+*/
+
+
+
+    })
+
+</script>
+</body>
+</html>

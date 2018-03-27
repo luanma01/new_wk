@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <a id="a1" href="#">1</a>
+        <a id="a2" href="#">2</a>
+        <a id="a3" href="#">3</a>
+        <a id="a4" href="#">4</a>
+        <a id="a5" href="#">5</a>
+    </div>
+
+    <script src="../js/common/jquery.min.js"></script>
+    <script src="../js/common/layer/layer.js"></script>
+    <script>
+
+
+        // layer.msg('hello world! ');
+        let num = 1;
+        a1.onclick = function(){
+            layer.open({
+                content: num,
+                btn: ['跳转','取消'],
+                yes: function(){
+                    layer.close();
+                    num++;
+                },
+                btn2: function(){
+                    layer.closeAll();
+                },
+                closeBtn: 2
+            })
+        }
+
+    </script>
+</body>
+</html>

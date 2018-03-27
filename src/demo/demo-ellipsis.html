@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .ellipsis{
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 130px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div><input class="ellipsis" readonly type="text" id="t1" value="roratedjaiojl;ajkf;jkapoweqrewrqroratedjaiojl;ajkf;jkapoweqrewrq"></div>
+        <!-- select 不行 -->
+        <div><select name="" id="t2">
+            <option value=""><p class="ellipsis">dfdfadfdafadsfdsafadfasdfdsfdsafadfasdfasdfadfsdafafdasfaddf</p></option>
+        </select></div>
+        <div id="t3"><p class="ellipsis">roratedjaiojl;ajkf;jkapoweqrewrqroratedjaiojl;ajkf;jkapoweqrewrq</p></div>
+        <div><span class="ellipsis">dfdfadfdafadsfdsafadfasdfdsfdsafadfasdfasdfadfsdafafdasfaddf</span></div>
+    </div>
+</body>
+</html>
