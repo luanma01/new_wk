@@ -1,0 +1,246 @@
+package com.qiancloud.webclass.util;
+
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * 日期工具类
+ */
+public final class DateUtils {
+	
+	/** 标准的日期格式 2015-01-01 18:00:00 */
+	public static final String FORMAT_NORMAL = "yyyy-MM-dd HH:mm:ss";
+	
+	/** 只包含年月日的格式 2015-01-01 */
+	public static final String FORMAT_DAY = "yyyy-MM-dd";
+	
+	/** 不包含秒的格式 2015-01-01 12:00 */
+	public static final String FORMAT_ROUTINE = "yyyy-MM-dd HH:mm";
+	
+	private static final Logger log = LoggerFactory.getLogger(DateUtils.class);
+	
+	/**
+	 * 将日期字符串转为时间格式
+	 * @param dateStr 待转换的日期字符串
+	 * @param pattern 需要转换的格式,默认为yyyy-MM-dd HH:mm:ss
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static Date parseStringToDate(String dateStr, String pattern){
+		if (Tools.isNotEmpty(dateStr)) {
+			if (dateStr.length() < 12) {
+				dateStr += " 00:00:00";
+			}
+			if (Tools.isEmpty(pattern)) {
+				pattern = FORMAT_NORMAL;
+			}
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			try {
+				return dateFormat.parse(dateStr);
+			} catch (ParseException e) {
+				log.error("将字符串转为日期异常,异常信息:{}", e);
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 将日期格式转为字符串
+	 * @param date 待转换的日期
+	 * @param pattern 需要转换的格式,默认为yyyy-MM-dd HH:mm:ss
+	 * @return
+	 */
+	public static String parseDateToString(Date date, String pattern){
+		if (Tools.isNotEmpty(date)) {
+			if (Tools.isEmpty(pattern)) {
+				pattern = FORMAT_NORMAL;
+			}
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			return dateFormat.format(date);
+		}
+		return null;
+	}
+	
+	/**
+	 * 将时间字符串转为Timestamp类型
+	 * @param dateStr 待转换的时间字符串
+	 * @param pattern 需要转换的格式,默认为yyyy-MM-dd HH:mm:ss
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Timestamp parseStringToTimeStamp(String dateStr, String pattern){
+		Timestamp timestamp = null;
+		if (Tools.isNotEmpty(dateStr)) {
+			if (Tools.isEmpty(pattern)) {
+				pattern = FORMAT_NORMAL;
+			}
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			try {
+				timestamp = new Timestamp(dateFormat.parse(dateStr).getTime());
+			} catch (ParseException e) {
+				log.error("将字符串转为Timestamp异常,异常信息:{}", e);
+				e.printStackTrace();
+			}
+		}
+		return timestamp;
+	}
+	
+	/**
+	 * 将Timestamp转为Date格式
+	 * @param timestamp 待转换的时间戳
+	 * @return
+	 */
+	public static Date parseTimestampToDate(Timestamp timestamp){
+		if (Tools.isNotEmpty(timestamp)) {
+			return new Date(timestamp.getTime());
+		}
+		return null;
+	}
+	
+	/**
+	 * timestamp转string
+	 * 
+	 * @param timestamp
+	 * @return
+	 */
+	public static String parseTimestampToString(Timestamp timestamp){
+		Date date = parseTimestampToDate(timestamp);
+		return parseDateToString(date, FORMAT_NORMAL);
+	}
+	
+	/**
+	 * 将Date转为Timestamp格式
+	 * @param date 待转换的java时间
+	 * @return
+	 */
+	public static Timestamp parseDateToTimestamp(Date date){
+		if (Tools.isNotEmpty(date)) {
+			return new Timestamp(date.getTime());
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * 比较两个日期的大小
+	 * @param dateStr1 日期字符串1
+	 * @param dateStr2 日期字符串2
+	 * @return 1:前者大于后者; 2:大于等于; 0:相等; -1:前者小于后者; -2:小于等于
+	 * @throws ParseException
+	 */
+	public static String compareDate(String dateStr1, String dateStr2) {
+		long date1 = parseStringToDate(dateStr1, null).getTime();
+		long date2 = parseStringToDate(dateStr2, null).getTime();
+		if (date1 > date2) {
+			return "1";
+		}else if (date1 >= date2) {
+			return "2";
+		}
+		else if (date1 < date2) {
+			return "-1";
+		}
+		else if (date1 <= date2) {
+			return "-2";
+		}else {
+			return "0";
+		}
+	}
+	
+	/**
+	 * 计算两个时间之间相差的小时数
+	 * @param date1 时间1
+	 * @param date2 时间2
+	 * @return date1 - date2
+	 */
+	public static int getHourMinus(Date date1, Date date2){
+		long millis1 = date1.getTime();
+		long millis2 = date2.getTime();
+		long hourMinus = (millis1 - millis2)/(1000 * 3600);
+		hourMinus = Math.abs(hourMinus);	// 取绝对值
+		return Integer.valueOf(String.valueOf(hourMinus));
+	}
+	
+	/**
+	 * 计算两个时间之间相差的分钟数
+	 * @param date1 时间1
+	 * @param date2 时间2
+	 * @return date1 - date2
+	 */
+	public static int getMinuteMinus(Date date1, Date date2){
+		long millis1 = date1.getTime();
+		long millis2 = date2.getTime();
+		long minuteMinus = (millis1 - millis2)/(1000 * 60);
+		minuteMinus = Math.abs(minuteMinus); // 取绝对值
+		return Integer.valueOf(String.valueOf(minuteMinus));
+	}
+	
+	/**
+	 * 计算两个时间之间相差的秒数
+	 * @param date1 时间1
+	 * @param date2 时间2
+	 * @return date2 - date1
+	 */
+	public static int getSecondMinus(Date date1, Date date2){
+		long millis1 = date1.getTime();
+		long millis2 = date2.getTime();
+		long secondMinus = (millis1 - millis2)/(1000);
+		secondMinus = Math.abs(secondMinus); // 取绝对值
+		return Integer.valueOf(String.valueOf(secondMinus));
+	}
+	
+	
+	/***
+	 * 获取某个时间的00:00:00 或 23:59:59
+	 * 
+	 * @param date 时间
+	 * @param flag 0,1
+	 * @return 0:返回当前的00:00:00 1:返回当前23:59:59
+	 */
+	public static Date getBeginOrEndDate(Date date, int flag) {  
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+    	// 时分秒（毫秒数）
+        long millisecond = hour*60*60*1000 + minute*60*1000 + second*1000;
+    	// 凌晨00:00:00
+        calendar.setTimeInMillis(calendar.getTimeInMillis()-millisecond);
+        
+        if (flag == 0) {
+        	return calendar.getTime();
+        } else if (flag == 1) {
+        	// 凌晨23:59:59
+        	calendar.setTimeInMillis(calendar.getTimeInMillis()+23*60*60*1000 + 59*60*1000 + 59*1000);
+        }
+        return calendar.getTime();
+	}
+	
+	
+	
+	
+	
+	
+	// 测试
+	public static void main(String[] args) throws Exception {
+		Date date1 = new Date();
+		Date date2 = parseStringToDate("2015-10-1 12:09:29", null);
+		System.out.println("当前时间:"+parseDateToString(date1, null));
+		System.out.println("比较的时间:"+parseDateToString(date2, null));
+		System.out.println("时间差:"+(date1.getTime() - date2.getTime())+"毫秒");
+		System.out.println("分钟数差:"+getMinuteMinus(date1, date2));
+		System.out.println("秒数差:"+getSecondMinus(date1, date2));
+		System.out.println("小时数差:"+getHourMinus(date1, date2));
+		System.out.println("比较时间的0点:"+getBeginOrEndDate(date2, 0));
+		System.out.println("当前时间的24点:"+getBeginOrEndDate(date1, 1));
+		System.out.println("当前时间的时间戳:"+parseDateToTimestamp(new Date()));
+	}
+	
+}

@@ -1,0 +1,90 @@
+package com.qiancloud.webclass.test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+
+import com.qiancloud.webclass.util.JsonUtils;
+import com.qiancloud.webclass.util.StringEncrypt;
+import com.qiancloud.webclass.util.WebClassConstant;
+
+public class TestHex {
+	public static void main(String[] args) {
+		Hex hex = new Hex();
+        try {
+			byte[] rawAppID = hex.decode("11f6429ce82e44c8889e860096d975ba".getBytes());
+			
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("Timestamp", 1517295552);
+			map.put("GroupID", "pukObhQFfsdfGiTHqA");
+			map.put("UserID", 14969);
+			map.put("UserType", 1);
+			map.put("UserName", "张三_老师");
+			Map<String, Object> roomMap = new HashMap<String, Object>();
+			roomMap.put("RoomID", 105414);
+			roomMap.put("HostID", 14969);
+			roomMap.put("AttenderID", new int[]{14970});
+			roomMap.put("AssistantID", 0);
+			roomMap.put("RoomType", 1);
+			roomMap.put("RoomName", "test—1VS1");
+			roomMap.put("NeedPassword", false);
+			roomMap.put("Password", "");
+			map.put("RoomInfo", roomMap);
+			List<Map<String, Object>> fileList = new ArrayList<Map<String, Object>>();
+			Map<String, Object> fileMap1 = new HashMap<String, Object>();
+			Map<String, Object> fileMap2 = new HashMap<String, Object>();
+			Map<String, Object> fileMap3 = new HashMap<String, Object>();
+			fileMap1.put("FileID", 10009727);
+			fileMap1.put("PageNums", 4);
+			fileMap1.put("FileName", "考勤管理办法V1.0.pdf");
+			fileMap1.put("FileDir", "wQjcyovEJSakyRAKjC");
+			
+			fileMap2.put("FileID", 10009875);
+			fileMap2.put("PageNums", 1);
+			fileMap2.put("FileName", "测试要点.docx");
+			fileMap2.put("FileDir", "WaahgXGDKJUWYrSgxM");
+			
+			fileMap3.put("FileID", 10009880);
+			fileMap3.put("PageNums", 18);
+			fileMap3.put("FileName", "样本_如何激励学生.pptx");
+			fileMap3.put("FileDir", "lLPHWTNTGqfYdvKUJj");
+			
+			fileList.add(fileMap1);
+			fileList.add(fileMap2);
+			fileList.add(fileMap3);
+			
+			map.put("FileInfo", fileList);
+			
+			
+			Map<String, Object> idMap = new HashMap<String, Object>();
+			idMap.put("roomId", 105414);
+			idMap.put("userId", 14969);
+			
+			try {
+				String json = JsonUtils.toJson(idMap);
+				json = StringEncrypt.encrypt(WebClassConstant.STR_INTERFACE_KEY, json);
+				json = Base64.encodeBase64String(json.getBytes("UTF-8"));
+				System.out.println(json);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+			
+			System.out.println("aaaaaaaaa");
+		} catch (DecoderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+}

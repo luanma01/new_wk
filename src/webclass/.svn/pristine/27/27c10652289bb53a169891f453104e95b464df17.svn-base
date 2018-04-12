@@ -1,0 +1,64 @@
+package com.qiancloud.webclass.util;
+
+import java.util.Collection;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+ 
+/**
+ * 使用com.fasterxml.jackson进行json的转换
+ * 对于多层的嵌套json数据,jackson也会逐级转换成Map或Object
+ */
+public final class JsonUtils {
+	
+	private static ObjectMapper objectmapper;
+	
+	static {
+		objectmapper = new ObjectMapper();
+		objectmapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		// 是否将允许使用非双引号属性名字,默认为false,由于json标准中使用双引号做属性名,建议不打开
+		// objectmapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+		// 无效的映射字段不会抛出异常
+		objectmapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	}
+	
+	/**
+	 * 将obj转换为json字符串
+	 *
+	 * @param obj
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	public static String toJson(Object obj) throws JsonProcessingException {
+		return objectmapper.writeValueAsString(obj);
+	}
+	
+	/**
+	 * 将json字符串转换为javabean
+	 *
+	 * @param jsonStr
+	 * @param clazz
+	 * @return
+	 * @throws Exception
+	 */
+	public static <T> T toBean(String jsonStr, Class<T> clazz) throws Exception {
+		return objectmapper.readValue(jsonStr, clazz);
+	}
+
+	public static Collection<?> toBeanList(String jsonStr, Class<?> collectionClazz, Class<?> clazz) throws Exception {
+		 JavaType type = objectmapper.getTypeFactory().constructParametricType(collectionClazz, clazz);
+		 return objectmapper.readValue(jsonStr, type);
+		 
+	}
+
+	
+	
+	public static void main(String[] args) throws Exception {
+
+	}
+	
+}

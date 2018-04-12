@@ -1,0 +1,624 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>talk 915</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="webclass">
+    <div class="main bd flex fl-col">
+        <div class="roominfo flex fl-between fl-align-c bg2">
+            <div class="logo flex">
+                <img src="../img/roominfo/LOGO.png" alt="logo">
+            </div>
+
+            <div class="room-title flex fl-center fl-align-c">
+                <div class="roominfo-icon">
+                    <img src="../img/roominfo/title.png" alt="title">
+                </div>
+                <span class="room-name">如何快速提高英语水平</span> &nbsp;/&nbsp;
+                <span class="room-time"> 08:00~10:00</span> &nbsp;/&nbsp;
+                教室号：<span class="room-id">10086</span>
+            </div>
+
+            <div class="room-setting flex fl-end fl-align-c">
+                <div class="roominfo-btn server-time">
+                    服务器时间：<span>32:23:12</span>
+                </div>
+
+                <div class="roominfo-btn pause-btn">
+                    <!--<div class="roominfo-icon">  -->
+                    <!--<img src="../img/roominfo/pause2.png" alt="pause">-->
+                    <!--</div>-->
+                    <span class="icon-ICon-01"></span>
+                    <span>停止上课</span>
+                </div>
+
+                <div class="roominfo-btn">
+                    计时：<span>32:23:12</span>
+                </div>
+
+                <div id="sys_setting" class="roominfo-btn setting-btn">
+                    <!--<div class="roominfo-icon">-->
+                    <!--<img src="../img/roominfo/setting2.png" alt="setting">-->
+                    <!--</div>-->
+                    <span class="icon-ICon-02"></span>
+                    <span>设置</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="room-content flex">
+            <div class="left bd flex fl-between">
+                <div class="teach-area flex fl-col fl-center fl-align-c">
+
+                    <div class="teach-area-top flex fl-end fl-align-c">
+                        <div class="top-reload btn-wrap">
+                            <button class="btn btn-default"> 刷新</button>
+                        </div>
+
+                        <div class="top-fit flex btn-wrap  dropdown">
+
+                            <button class="btn btn-default dropdown dropdown-toggle" data-toggle="dropdown">
+                                适页
+                                <span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#"> 适宽</a>
+                                </li>
+                                <li>
+                                    <a href="#"> 适页</a>
+                                </li>
+                                <li>
+                                    <a href="#"> 全屏</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="top-note btn-wrap">
+                            <button id="notes" class="btn btn-default"> 备注</button>
+                        </div>
+                    </div>
+
+                    <div class="teach-area-bottom flex fl-end fl-align-c">
+                        <div class="bottom-count btn-wrap">
+                            <button id="page_count" class="btn btn-default"> 12/12</button>
+
+                            <div id="page_count_div">
+                                <form action="">
+                                    <div>
+                                        <input id="turnToNum" type="text" value="1">
+                                    </div>
+                                    <div>
+                                        <button class="btn-yes"> 跳转</button>
+                                        <button class="btn-cancel"> 取消</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <a href="#" class="btn page-pre"><img src="../img/teach-area/page-pre.png" alt=""></a>
+
+                    <a href="#" class="btn page-next"><img src="../img/teach-area/page-next.png" alt=""></a>
+
+                    <div class="file-area">
+
+                        <div class="teaching-file-content" id="file-box">
+                            <img id="tf_bg_img" src="" alt="">
+                            <iframe id="iframe" style="display:none;" allowfullscreen frameborder="0" scrolling="no"></iframe>
+                            <canvas id="cvs_cache"></canvas>
+                            <canvas id="cvs"></canvas>
+                        </div>
+
+                    </div>
+
+                    <!-- 备注/教案 -->
+                    <div id="notes_div">
+                        <div>
+                            <h2> 退出备注 </h2>
+                            <ul></ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="tool-area flex fl-col fl-align-c">
+                    <div class="filebar">
+                        <div>
+                            <div id="select_file" class="icon-div">
+                                <span class="icon-ICon-05"></span>
+                            </div>
+
+                            <div id="select_file_div">
+                                <dl>
+                                    <dt>
+                                        <h3> 教材文档 </h3>
+                                    </dt>
+                                    <dd>
+                                        <span>1.测试教材第一章.pdf</span>
+                                        <button class="btn btn-yes"> 已选用 </button>
+                                    </dd>
+                                    <dd>
+                                        <span>2.测试教材第二章.pdf</span>
+                                        <button class="btn btn-cancel"> 选用 </button>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <h3> 音频文档 </h3>
+                                    </dt>
+                                    <dd>
+                                        <span>2.测试教材第二章.pdf</span>
+                                        <button class="btn btn-cancel"> 选用 </button>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div id="upload_file" class="icon-div">
+                                <span class="icon-ICon-06"></span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="toolbar">
+                        <div class="dropdown tool-pen">
+                            <div class="icon-div dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                 aria-expanded="false">
+                                <span class="icon-ICon-07"></span>
+                            </div>
+                            <ul class="dropdown-menu">
+                                <li data-info="pencil">
+                                    <!--<span> <img src="../img/tool-area/point0.png" alt="point"></span>-->
+                                    <span class="icon-ICon-25" data-role="icon-ICon-07"></span>
+                                    <span> 涂鸦</span>
+                                </li>
+                                <li data-info="text">
+                                    <!--<span> <img src="../img/tool-area/text0.png" alt="text"></span>-->
+                                    <span class="icon-ICon-28" data-role="icon-ICon-16"></span>
+                                    <span> 文字</span>
+                                </li>
+                                <li data-info="line">
+                                    <!--<span> <img src="../img/tool-area/line0.png" alt="line"></span>-->
+                                    <span class="icon-ICon-27" data-role="icon-ICon-13"></span>
+                                    <span> 直线</span>
+                                </li>
+                                <li data-info="circle">
+                                    <!--<span> <img src="../img/tool-area/circle0.png" alt="circle"></span>-->
+                                    <span class="icon-ICon-24" data-role="icon-ICon-14"></span>
+                                    <span> 圆形</span>
+                                </li>
+                                <li data-info="rectangle">
+                                    <!--<span> <img src="../img/tool-area/rectangle0.png" alt="rectangle"></span>-->
+                                    <span class="icon-ICon-26" data-role="icon-ICon-15"></span>
+                                    <span> 矩形</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown tool-color">
+                            <div class="icon-div dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                 aria-expanded="false">
+                                <span class="icon-ICon-08"></span>
+                            </div>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <!--<span> <img src="../img/tool-area/black0.png" alt="color-black"></span>-->
+                                    <span class="icon-ICon-32 black"></span>
+                                    <span> 黑色</span>
+                                </li>
+                                <li>
+                                    <!--<span> <img src="../img/tool-area/orange0.png" alt="color-orange"></span>-->
+                                    <span class="icon-ICon-32 orange"></span>
+                                    <span> 橙色</span>
+                                </li>
+                                <li>
+                                    <!--<span> <img src="../img/tool-area/red0.png" alt="color-red"></span>-->
+                                    <span class="icon-ICon-32 red"></span>
+                                    <span> 红色</span>
+                                </li>
+                                <li>
+                                    <!--<span> <img src="../img/tool-area/blue0.png" alt="color-blue"></span>-->
+                                    <span class="icon-ICon-32 blue"></span>
+                                    <span> 蓝色</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <div class="icon-div" id="tool_undo">
+                                <span class="icon-ICon-10"></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="icon-div" id="tool_redo">
+                                <span class="icon-ICon-09"></span>
+                            </div>
+                        </div>
+
+                        <div class="dropdown tool-clean">
+                            <div class="icon-div dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                 aria-expanded="false">
+                                <span class="icon-ICon-17"></span>
+                            </div>
+
+                            <ul class="dropdown-menu">
+                                <li data-info="eraser">
+                                    <span class="icon-ICon-29" data-role="icon-ICon-11"></span>
+                                    <span> 橡皮擦</span>
+                                </li>
+                                <li data-info="clean">
+                                    <span class="icon-ICon-30" data-role="icon-ICon-17"></span>
+                                    <span> 清屏</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="tool-lock">
+                            <div class="icon-div">
+                                <span class="icon-ICon-12" data-role="locked"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="right flex fl-col fl-align-c bd">
+                <div class="video-pannel">
+                    <div class="video v1">
+                        <div></div>
+                        <div class="vd-info teacher flex fl-between fl-align-c">
+                            <div class="flex fl-align-c">
+                                <span class="teacher-name">王老师</span>
+                                <div class="vd-icon">
+                                    <!--<img src="../img/right/micro.png" alt="">-->
+                                    <span class="icon-ICon-19"></span>
+                                </div>
+                                <div class="vd-icon">
+                                    <!--<img src="../img/right/video.png" alt="">-->
+                                    <span class="icon-ICon-20"></span>
+                                </div>
+                            </div>
+
+                            <div class="flex fl-align-c">
+                                <div class="vd-icon">
+                                    <!--<img src="../img/right/zan.png" alt="">-->
+                                    <span class="icon-ICon-31"></span>
+                                </div>
+                                <span>99</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="video v2">
+                        <div></div>
+                        <div class="vd-info student flex fl-between fl-align-c">
+                            <div class="flex fl-align-c">
+                                <span class="student-name">未连接</span>
+                                <div class="vd-icon">
+                                    <!--<img src="../img/right/micro2.png" alt="">-->
+                                    <span class="icon-ICon-19"></span>
+                                </div>
+                                <div class="vd-icon">
+                                    <!--<img src="../img/right/video2.png" alt="">-->
+                                    <span class="icon-ICon-20"></span>
+                                </div>
+                            </div>
+                            <div class="flex fl-align-c">
+                                <div class="vd-icon">
+                                    <!--<img src="../img/right/zan2.png" alt="">-->
+                                    <span class="icon-ICon-31"></span>
+                                </div>
+                                <span>00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-pannel">
+                    <div class="chat-show bd">
+                        <ul class="im-current flex fl-col fl-align-start">
+
+                            <li class="teacher">
+                                <div class="chat-title">
+                                    <span class="chat-name">王老师</span>
+                                    <span class="chat-time">10:52:11</span>
+                                </div>
+                                <div class="chat-msg">开始上课！！！</div>
+                            </li>
+
+                            <li class="student">
+                                <div class="chat-title">
+                                    <span class="chat-name">陈独秀同学</span>
+                                    <span class="chat-time">10:52:11</span>
+                                </div>
+                                <div class="chat-msg">我准备好发言了！</div>
+                            </li>
+
+                            <li class="me student">
+                                <div class="chat-title">
+                                    <span class="chat-name">自己</span>
+                                    <span class="chat-time">10:55:10</span>
+                                </div>
+                                <div class="chat-msg">…………</div>
+                            </li>
+
+                            <li class="system">
+                                <div class="chat-title">
+                                    <span class="chat-name">系统消息</span>
+                                    <span class="chat-time">10:55:10</span>
+                                </div>
+                                <div class="chat-msg">陈独秀你被禁言了!!!</div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="chat-do bd">
+                        <div class="chat-ipt" contenteditable="true"></div>
+
+                        <div class="chat-send flex fl-between">
+
+                            <div class="flex fl-align-c">
+                                <div class="dropup ">
+                                    <img src="../img/right/smile.png" class="dropdown-toggle sticker-default"
+                                         id="sticker-selection" data-toggle="dropdown" aria-haspopup="true"
+                                         aria-expanded="false">
+                                    <ul class="dropdown-menu sticker-menu" aria-labelledby="sticker-selection">
+                                        <li class="flex fl-center">
+                                            <div class="sticker-item"><img cs-role="001"
+                                                                           src="../img/im/sticker/001.png"></div>
+                                            <div class="sticker-item"><img cs-role="002"
+                                                                           src="../img/im/sticker/002.png"></div>
+                                            <div class="sticker-item"><img cs-role="003"
+                                                                           src="../img/im/sticker/003.png"></div>
+                                            <div class="sticker-item"><img cs-role="004"
+                                                                           src="../img/im/sticker/004.png"></div>
+                                            <div class="sticker-item"><img cs-role="005"
+                                                                           src="../img/im/sticker/005.png"></div>
+                                            <div class="sticker-item"><img cs-role="006"
+                                                                           src="../img/im/sticker/006.png"></div>
+                                        </li>
+                                        <li class="flex fl-center">
+                                            <div class="sticker-item"><img cs-role="007"
+                                                                           src="../img/im/sticker/007.png"></div>
+                                            <div class="sticker-item"><img cs-role="008"
+                                                                           src="../img/im/sticker/008.png"></div>
+                                            <div class="sticker-item"><img cs-role="009"
+                                                                           src="../img/im/sticker/009.png"></div>
+                                            <div class="sticker-item"><img cs-role="010"
+                                                                           src="../img/im/sticker/010.png"></div>
+                                            <div class="sticker-item"><img cs-role="011"
+                                                                           src="../img/im/sticker/011.png"></div>
+                                            <div class="sticker-item"><img cs-role="012"
+                                                                           src="../img/im/sticker/012.png"></div>
+                                        </li>
+                                        <li class="flex fl-center">
+                                            <div class="sticker-item"><img cs-role="013"
+                                                                           src="../img/im/sticker/013.png"></div>
+                                            <div class="sticker-item"><img cs-role="014"
+                                                                           src="../img/im/sticker/014.png"></div>
+                                            <div class="sticker-item"><img cs-role="015"
+                                                                           src="../img/im/sticker/015.png"></div>
+                                            <div class="sticker-item"><img cs-role="016"
+                                                                           src="../img/im/sticker/016.png"></div>
+                                            <div class="sticker-item"><img cs-role="017"
+                                                                           src="../img/im/sticker/017.png"></div>
+                                            <div class="sticker-item"><img cs-role="018"
+                                                                           src="../img/im/sticker/018.png"></div>
+                                        </li>
+                                        <li class="flex fl-center">
+                                            <div class="sticker-item"><img cs-role="019"
+                                                                           src="../img/im/sticker/019.png"></div>
+                                            <div class="sticker-item"><img cs-role="020"
+                                                                           src="../img/im/sticker/020.png"></div>
+                                            <div class="sticker-item"><img cs-role="021"
+                                                                           src="../img/im/sticker/021.png"></div>
+                                            <div class="sticker-item"><img cs-role="022"
+                                                                           src="../img/im/sticker/022.png"></div>
+                                            <div class="sticker-item"><img cs-role="023"
+                                                                           src="../img/im/sticker/023.png"></div>
+                                            <div class="sticker-item"><img cs-role="024"
+                                                                           src="../img/im/sticker/024.png"></div>
+                                        </li>
+                                        <li class="flex fl-center">
+                                            <div class="sticker-item"><img cs-role="025"
+                                                                           src="../img/im/sticker/025.png"></div>
+                                            <div class="sticker-item"><img cs-role="026"
+                                                                           src="../img/im/sticker/026.png"></div>
+                                            <div class="sticker-item"><img cs-role="027"
+                                                                           src="../img/im/sticker/027.png"></div>
+                                            <div class="sticker-item"><img cs-role="028"
+                                                                           src="../img/im/sticker/028.png"></div>
+                                            <div class="sticker-item"><img cs-role="029"
+                                                                           src="../img/im/sticker/029.png"></div>
+                                            <div class="sticker-item"><img cs-role="030"
+                                                                           src="../img/im/sticker/030.png"></div>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+                                <div class="dropup">
+                                    <img src="../img/right/bubble.png" class="dropdown-toggle constant-default"
+                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <ul class="dropdown-menu constant-menu" aria-labelledby="constant-selection">
+                                        <li>
+                                            <div>你可以听到我说话吗？</div>
+                                            <div>Can you hear me?</div>
+                                        </li>
+                                        <li>
+                                            <div>老师可以重复一遍吗？</div>
+                                            <div>Pardon?</div>
+                                        </li>
+                                        <li>
+                                            <div>抱歉，我没听明白。</div>
+                                            <div>Sorry,I don't understand.</div>
+                                        </li>
+                                        <li>
+                                            <div>我听不清楚。</div>
+                                            <div>Sorry,I can't hear you well.</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div flex fl-align-c>
+                                <div class="send-btn">发送</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="sys_setting_div">
+        <div>
+            <h2></h2>
+            <form>
+                <div class="form-row">
+                    <label class="control-label">帐号锁定:</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isLocked" hidden>
+
+                        <label for="isLocked" class="switch">
+                            <div class="switch-fill">
+                            </div>
+                        </label>
+
+                        <span>帐号已锁定</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label class="control-label">麦克风:</label>
+                    <div>
+                        <select id="microphone-device" class="form-control">
+                            <option value="1">对准麦克风说话，测试有没有声音对准麦克风说话，测试有没有声音对准麦克风说话，测试有没有声音</option>
+                        </select>
+                        <p> 对准麦克风说话，测试有没有声音</p>
+                        <div class="flex">
+                            <button class="btn btn-test"> 测试</button>
+
+                            <div class="showbar"  >
+                                <div class="go micro-go"></div>
+                                <div class ="showbar-bar">
+                                </div >
+                            </div >
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label class="control-label">扬声器:</label>
+                    <div>
+                        <select id="speaker-device" class="form-control">
+                        </select>
+                        <p> 请带上耳机，测试能否听到声音</p>
+                        <div class="flex">
+                            <button class="btn btn-test"> 测试</button>
+
+                            <div class="showbar"  >
+                                <div class="go speaker-go"></div>
+                                <div class ="showbar-bar">
+                                </div >
+                            </div >
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label class="control-label">摄像头:</label>
+                    <div>
+                        <select id="camera-device" class="form-control">
+                        </select>
+                        <div class="video-group">
+                            <video id="camera-test" src=""></video>
+                            <span> 未连接到摄像头 </span>
+                        </div>
+                    </div>
+                </div>
+                <input id="app-id" type="hidden" value="${appId }">
+                <div class="form-row">
+                    <button class="btn btn-yes"> 确定 </button>
+                    <button class="btn btn-cancel"> 取消 </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div id="upload_file_div">
+        <div>
+            <form>
+                <label for="file_type_img">
+                    <div>
+                        <input type="radio" id="file_type_img" name="file_type">
+                        <span>静态的图片教材上传</span>
+                    </div>
+
+                    <div>
+                        <img src="../img/file_type_img.png" alt="">
+                    </div>
+                </label>
+
+                <label for="file_type_h5">
+                    <div>
+                        <input type="radio" id="file_type_h5" name="file_type">
+                        <span>带有动画效果的PPT教材</span>
+                    </div>
+
+                    <div>
+                        <img src="../img/file_type_h5.gif" alt="">
+                    </div>
+                </label>
+
+                <div>
+                    <button class="btn btn-yes"> 确定 </button>
+                    <button class="btn btn-yes"> 取消 </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="../js/common/jquery.min.js"></script>
+<script src="../js/common/bootstrap.min.js"></script>
+<script src="../js/jcanvas.min.js"></script>
+<script src="../js/common/layer/layer.js"></script>
+<!--<script src="../js/common/preloadjs-0.4.1.min.js"></script>-->
+<script src="../js/main.js"></script>
+<script src="../js/im.js"></script>
+<!--<script src="../js/AgoraRTCSDK/AgoraRTCSDK-2.1.0.js"></script>-->
+<!--<script src="../js/agora-init.js"></script>-->
+<script src="../js/initUI.js"></script>
+<script src="../js/draw.js"></script>
+<script>
+</script>
+
+</body>
+</html>

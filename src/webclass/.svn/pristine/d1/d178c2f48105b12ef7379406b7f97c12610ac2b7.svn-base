@@ -1,0 +1,48 @@
+package com.qiancloud.webclass.action;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.qiancloud.webclass.util.JsonUtils;
+
+/**
+ * 公共控制类
+ */
+public abstract class BaseController {
+	
+	protected static final Logger log = LoggerFactory.getLogger(BaseController.class);
+	
+	protected static final ResourceBundle rb = ResourceBundle.getBundle("webclass");
+	
+	/**
+	 * 返回json格式的数据
+	 * 
+	 * @param obj
+	 * @param response
+	 * @throws Exception
+	 */
+	public static void returnJsonData(Object obj, HttpServletResponse response){
+		// 清空response
+		response.reset();
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=UTF-8");
+		response.setHeader("Cache-Control", "no-cache");
+		PrintWriter pw;
+		try {
+			pw = response.getWriter();
+			pw.write(JsonUtils.toJson(obj));
+		} catch (JsonProcessingException e) {
+			log.error("json转换异常", e);
+		} catch (IOException e) {
+			log.error("I/O异常", e);//此处tomcat会自动调用flush和close方法处理流
+		}
+	}
+	
+}

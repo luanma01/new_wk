@@ -1,0 +1,71 @@
+{
+  "code": null,
+  "data": {
+    "Command": "EnterRoom",
+    "FileInfo": [
+      {
+        "FileDir": "wQjcyovEJSakyRAKjC",
+        "FileID": 10009727,
+        "FileName": "考勤管理办法V1.0.pdf",
+        "PageNums": 4,
+        "TeachingFileDir": "",
+        "TeachingFileID": 0,
+        "TeachingPageNums": 0
+      },
+      {
+        "FileDir": "WaahgXGDKJUWYrSgxM",
+        "FileID": 10009875,
+        "FileName": "测试要点.docx",
+        "PageNums": 1,
+        "TeachingFileDir": "",
+        "TeachingFileID": 0,
+        "TeachingPageNums": 0
+      },
+      {
+        "FileDir": "lLPHWTNTGqfYdvKUJj",
+        "FileID": 10009880,
+        "FileName": "样本_如何激励学生.pptx",
+        "PageNums": 18,
+        "TeachingFileDir": "",
+        "TeachingFileID": 0,
+        "TeachingPageNums": 0
+      },
+      {
+        "FileDir": "BxeSZUoeDiydbqTVKc",
+        "FileID": 10009885,
+        "FileName": "牵云互动视频云平台介绍V1.5.pdf",
+        "PageNums": 14,
+        "TeachingFileDir": "",
+        "TeachingFileID": 0,
+        "TeachingPageNums": 0
+      }
+    ],
+    "GroupID": "pukObhQFfsdfGiTHqA",
+    "HtmlFileInfo": [],
+    "IMToken": "ygrFtdGyiYaonp93om9gkbSi3cS73KV9dJG/2q3YiH55cm2gpHOgZpW10N+5n9ikd7Omn8rkp9+0nycYE1LSCg==",
+    "RoomInfo": {
+      "AssistantID": 0,
+      "AttenderID": [14970],
+      "HostID": 14969,
+      "NeedPassword": false,
+      "Password": "",
+      "RoomExID": "R_xZLJZEQuRwiG325vdjO4RQ",
+      "RoomID": 105414,
+      "RoomName": "test-1VS1",
+      "RoomType": 1,
+      "StartTime": "2017/4/12 11:01:00",
+      "StopTime": "2018/4/12 11:01:00",
+      "VideoProfileType": -1
+    },
+    "Timestamp": 1519780823,
+    "Tunnel": "Agora",
+    "UserExID": "1419",
+    "UserID": 14970,
+    "UserName": "web_test_学生",
+    "UserType": 2
+  },
+  "error": null,
+  "message": null,
+  "object": null,
+  "success": true
+}

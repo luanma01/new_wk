@@ -1,0 +1,346 @@
+package com.qiancloud.webclass.util;
+
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * 公共的工具类
+ */
+public final class Tools {
+	
+	/**
+	 * 判断对象是否为空
+	 *
+	 * @param obj
+	 * @return 空:true 非空:false
+	 */
+	public static boolean isEmpty(Object obj) {
+		boolean flag = true;
+		if (obj != null) {
+			if (obj instanceof String) {
+				if (!"".equals(String.valueOf(obj).trim())) {
+					flag = false;
+				}
+			} else {
+				flag = false;
+			}
+		}
+		return flag;
+	}
+	
+	/**
+	 * 判断对象是否非空
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static boolean isNotEmpty(Object obj){
+		return !isEmpty(obj);
+	}
+	
+	/**
+	 * 判断字符串是否为数字
+	 *
+	 * @param str
+	 * @return true:是数字 false:不是数字
+	 */
+	public static boolean isNumeric(String str){
+    	if (isEmpty(str)) {
+			return false;
+		}
+		Pattern pattern = Pattern.compile("-?[0-9]+.?[0-9]+");
+		Matcher isNum = pattern.matcher(str);
+		if (!isNum.matches()) {
+			return false;
+		}
+		return true;
+    }
+	
+	/**
+	 * 针对浏览器的差异解决乱码问题
+	 *
+	 * @param request
+	 * @param messyStr
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String toUTF8(HttpServletRequest request, String messyStr)
+			throws UnsupportedEncodingException {
+		String correctStr = null;  
+		String agent = request.getHeader("USER-AGENT");  
+		if (agent != null){  
+		    if (-1 != agent.indexOf("Firefox")) {// Firefox  
+		    	correctStr = "=?UTF-8?B?" + (new String(org.apache.commons.codec.binary.Base64.encodeBase64(messyStr.getBytes("UTF-8"))))+ "?=";  
+		    } else if (-1 != agent.indexOf("Chrome")) {// Chrome  
+		    	correctStr = new String(messyStr.getBytes(), "ISO8859-1");  
+		    } else if (agent.indexOf("Trident") > 0) {// 判断浏览器是否是 IE，如果是就对其进行 URL编码
+	    		correctStr = java.net.URLEncoder.encode(messyStr, "UTF-8");
+	    	} else {// 其它浏览器直接按UTF-8编码
+	    		correctStr = new String(messyStr.getBytes(),"UTF-8");
+	    	}
+		} else {
+		    correctStr = messyStr;
+		}  
+		return correctStr; 
+	}
+	
+	/**
+	 * 转换为String类型
+	 * @param obj
+	 * @return
+	 */
+	public static String convertToString(Object obj){
+		try {
+			if (isNotEmpty(obj)) {
+				return String.valueOf(obj);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 转换为Integer类型
+	 * @param obj
+	 * @return
+	 */
+	public static Integer convertToInteger(Object obj){
+		try {
+			if (isNotEmpty(obj)) {
+				return Integer.valueOf(convertToString(obj));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 转换为Long类型
+	 * @param obj
+	 * @return
+	 */
+	public static Long convertToLong(Object obj){
+		try {
+			if (isNotEmpty(obj)) {
+				return Long.valueOf(convertToString(obj));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 转换为Double类型
+	 * @param obj
+	 * @return
+	 */
+	public static Double convertToDouble(Object obj){
+		try {
+			if (isNotEmpty(obj)) {
+				return Double.valueOf(convertToString(obj));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 转换为Short类型
+	 * @param obj
+	 * @return
+	 */
+	public static Short convertToShort(Object obj){
+		try {
+			if (isNotEmpty(obj)) {
+				return Short.valueOf(convertToString(obj));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 转换为Boolean类型
+	 * @param obj
+	 * @return
+	 */
+	public static Boolean convertToBoolean(Object obj){
+		try {
+			if (isNotEmpty(obj)) {
+				return Boolean.valueOf(convertToString(obj));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 获取请求的IP地址
+	 * @param request
+	 * @return
+	 */
+	public static String getRequestIP(HttpServletRequest request){    
+		String ip = request.getHeader("x-forwarded-for");
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");    
+		}    
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");    
+		}    
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_CLIENT_IP");    
+		}    
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");    
+		}    
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();    
+		}
+		return ip;    
+	}  
+
+	
+	/**
+	 * 获取服务端的IP地址--测试似乎有问题 待定
+	 * 
+	 * @return
+	 */
+	public static String getServerIP(){
+    	String server_ip = null;
+    	try {
+    		Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+    		InetAddress ip = null;
+    		while (netInterfaces.hasMoreElements()) {
+    			NetworkInterface ni = (NetworkInterface) netInterfaces.nextElement();
+    			Enumeration<InetAddress> adds = ni.getInetAddresses();
+    			while (adds.hasMoreElements()) {
+    				ip = adds.nextElement();
+    				server_ip = ip.getHostAddress();
+    				if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress()
+    						&& ip.getHostAddress().indexOf(":") == -1) {
+    					server_ip = ip.getHostAddress();
+    					break;
+    				} else {
+    					ip = null;
+    				}
+    			}
+    		}
+    	} catch (SocketException e) {
+    		e.printStackTrace();
+    	}
+    	return server_ip;
+	}
+	
+	
+	/**
+	 * 判断请求是否为ajax请求
+	 * 
+	 * @param request
+	 * @return true:是ajax请求  false:不是ajax请求
+	 */
+	public static boolean isAjaxRequest(HttpServletRequest request){
+		String header = request.getHeader("X-Requested-With");
+		if ("XMLHttpRequest".equals(header)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 判断请求的来源
+	 * 
+	 * @param request
+	 * @return 0:PC端|1:安卓端|2:iPhone端|3:iPad端
+	 */
+	public static int getPlatform(HttpServletRequest request){
+		String header = request.getHeader("USER-AGENT").toLowerCase();
+		if (header.contains("android")) {
+			return 1;
+		} else if (header.contains("iphone")) {
+			return 2;
+		} else if (header.contains("ipad")) {
+			return 3;
+		} else {
+			return 0;
+		}
+	}
+	
+	
+	
+	/**
+	 * 将包含特殊字符的全角字符转为半角字符
+	 * 
+	 * @param fullWidthStr
+	 * @return
+	 */
+	public static String convertToHalfChar(String fullWidthStr) {
+		if (null == fullWidthStr || fullWidthStr.length() <= 0) {
+			return "";
+		}
+		char[] charArray = fullWidthStr.toCharArray();
+		// 对全角字符转换的char数组遍历
+		for (int i = 0; i < charArray.length; ++i) {
+			int charIntValue = (int) charArray[i];
+			// 如果符合转换关系,将对应下标之间减掉偏移量65248;如果是空格的话,直接做转换
+			if (charIntValue >= 65281 && charIntValue <= 65374) {
+				charArray[i] = (char) (charIntValue - 65248);
+			} else if (charIntValue == 12288) {
+				charArray[i] = (char) 32;
+			}
+		}
+		return new String(charArray);
+	}
+	
+	
+	/**
+	 * 生成8位不重复的随机数字
+	 * 
+	 * @return
+	 */
+	public static String createUniqueCode() {
+		String code = "";
+		int arr[] = new int[8];
+		int num = 0;
+		for (int i = 0; i < 8; i++) {
+			arr[i] = new Random().nextInt(10);
+			if (0 == i && 0 == arr[0]) {// 防止第一位出现0
+				i-- ;
+				continue ;
+			}
+			num = arr[i];
+			for (int j = 0; j < i; j++) {
+				if (arr[j] == num) {
+					i--;
+					break;
+				}
+			}
+		}
+		if (arr.length > 0) {
+			for (int i = 0; i < arr.length; i++) {
+				code += arr[i];
+			}
+		}
+		return code;
+	}
+	
+	//测试
+	public static void main(String[] args) {
+		for (int i = 0; i < 100; i++) {
+			System.out.println(createUniqueCode());
+		}
+	}
+}

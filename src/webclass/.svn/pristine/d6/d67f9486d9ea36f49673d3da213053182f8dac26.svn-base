@@ -1,0 +1,186 @@
+package com.qiancloud.webclass.action;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.qiancloud.webclass.pojo.RespResult;
+import com.qiancloud.webclass.util.DateUtils;
+import com.qiancloud.webclass.util.HttpClientHelper;
+import com.qiancloud.webclass.util.JsonUtils;
+import com.qiancloud.webclass.util.StringEncrypt;
+import com.qiancloud.webclass.util.Tools;
+import com.qiancloud.webclass.util.WebClassConstant;
+
+@Controller
+@RequestMapping("/main")
+public class MainController extends BaseController{
+	
+	private static final String API_VERSION = rb.getString("version");
+	
+	private static final String AGORA_APP_ID = rb.getString("APP_ID");
+	
+	private static final String FILE_DOMAIN = rb.getString("fileDomain");
+	
+	@RequestMapping(value="/init", method=RequestMethod.GET)
+	public ModelAndView goTestIndex(String webclass, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("/main");
+		mv.addObject("webclass", webclass);
+		mv.addObject("appId", AGORA_APP_ID);
+		mv.addObject("domain", FILE_DOMAIN);
+		return mv;
+	}
+	
+	
+	// enter room, get room info
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="/enterRoom", method=RequestMethod.POST)
+	public void enterRoom(String webclass, HttpServletRequest request, HttpServletResponse response) {
+		RespResult result = new RespResult(false);
+		try {
+			if (Tools.isNotEmpty(webclass)) {
+				String webclassParam = StringEncrypt.decrypt(WebClassConstant.STR_URL_ENCRYPT_KEY, webclass);
+				Map map = JsonUtils.toBean(webclassParam, Map.class);
+				String groupId = Tools.convertToString(map.get("GroupID"));
+				String urlId = Tools.convertToString(map.get("URLID"));
+				// get file data
+				if (Tools.isNotEmpty(map) && map.entrySet().size() > 0) {
+					String enterRoomCommandUlr = rb.getString("enterRoomCommand");
+					String key = groupId + "+" + DateUtils.parseDateToTimestamp(new Date());
+					key = StringEncrypt.encrypt(WebClassConstant.STR_INTERFACE_KEY, key);
+					Map<String, Object> paramMap = new HashMap<String, Object>();
+					paramMap.put("Version", API_VERSION);
+					paramMap.put("URLID", urlId);
+					paramMap.put("VerificationKey", key);
+
+					long begin = new Date().getTime();
+					log.info("===开始调用获取进入教室协议接口===,url: {},参数: {}", enterRoomCommandUlr, paramMap);
+					String resp = HttpClientHelper.postReq(enterRoomCommandUlr, paramMap);
+					long end = new Date().getTime();
+					log.info("===调用获取进入教室协议接口结束===,耗时: {}ms", (end - begin));
+					Map<String, Object> ret = JsonUtils.toBean(resp, Map.class);
+					if (Tools.isNotEmpty(ret)) {
+						Boolean success = Boolean.valueOf(String.valueOf(ret.get("Result")));
+						if (!success) {
+							log.error("===调用获取进入教室协议接口返回错误===,UrlId: {}, 错误原因: {}", urlId,
+									String.valueOf(ret.get("code")));
+							result.setMessage("服务器异常,请稍后再试!");
+						} else {
+							// 解析协议
+							String command = Tools.convertToString(ret.get("Command"));
+							String commandDpt = StringEncrypt.decrypt(WebClassConstant.STR_URL_ENCRYPT_KEY, command);
+							Map<String, Object> roomInfoMap = JsonUtils.toBean(commandDpt, Map.class);
+							Long ts = Tools.convertToLong(roomInfoMap.get("Timestamp")) * 1000;
+							//System.out.println(new Timestamp(ts));
+							long min = (new Date().getTime() - ts) / 1000 / 60;
+							if (min > 30) {
+								result.setMessage("链接已失效,请重新进入教室!");
+							} else {
+								result.setSuccess(true);
+								result.setData(roomInfoMap);
+							}
+						}
+					}
+				}
+			} else {
+				result.setMessage("无效的链接地址!");
+			}
+		} catch (Exception e) {
+			result.setMessage("链接地址无效!");
+			log.error("web端进入教室异常,webclass: {}, 错误原因: {}", webclass, e);
+			e.printStackTrace();
+		}
+		returnJsonData(result, response);
+	}
+	
+	/**
+	 * when recive openfile(new) command, get file status
+	 * 
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value="/getFileStatus", method=RequestMethod.POST)
+	public void getFileStatus(HttpServletRequest request, HttpServletResponse response) {
+		RespResult result = new RespResult(false);
+		Integer fileId = Tools.convertToInteger(request.getParameter("fileId"));
+		String groupId = request.getParameter("groupId");
+		if (fileId > 0 && Tools.isNotEmpty(groupId)) {
+			try {
+				String getFileStatusUlr = rb.getString("getFileStatus");
+				String key = groupId + "+" + DateUtils.parseDateToTimestamp(new Date());
+				key = StringEncrypt.encrypt(WebClassConstant.STR_INTERFACE_KEY, key);
+				Map<String, Object> paramMap = new HashMap<String, Object>();
+				paramMap.put("Version", API_VERSION);
+				// paramMap.put("UA", "Web");
+				paramMap.put("UA", "Windows");
+				paramMap.put("FileID", fileId);
+				paramMap.put("ConvertType", "JPG");
+				paramMap.put("VerificationKey", key);
+				
+				// get file status
+				long begin = new Date().getTime();
+				log.info("===开始调用获取文件状态接口===,url: {},参数: {}", getFileStatusUlr, paramMap);
+				String resp = HttpClientHelper.postReq(getFileStatusUlr, paramMap);
+				long end = new Date().getTime();
+				log.info("===调用获取文件状态接口结束===,耗时: {}ms", (end - begin));
+				Map<String, Object> ret = JsonUtils.toBean(resp, Map.class);
+				if (Tools.isNotEmpty(ret)) {
+					Boolean success = Boolean.valueOf(String.valueOf(ret.get("Result")));
+					if (!success) {
+						log.error("===调用获取文件状态接口返回错误===,fileId: {}, 错误原因: {}", fileId, String.valueOf(ret.get("code")));
+						result.setMessage("服务器异常,请稍后再试!");
+					} else {
+						String fileStatus = Tools.convertToString(ret.get("FileStatus"));
+						if ("converted".equalsIgnoreCase(fileStatus)) {
+							result.setSuccess(true);
+						} else {
+							result.setMessage("文件尚未转换完成,请稍后再试!");
+						}
+					}
+				}
+			} catch (Exception e) {
+				log.error("web端获取文件转换状态异常,fileId: {}, 错误原因: {}", fileId, e);
+				result.setMessage("服务器异常,请稍后再试!");
+			}
+		} else {
+			result.setMessage("无效的参数!");
+		}
+		returnJsonData(result, response);
+	}
+	
+	public static void main(String[] args) {
+		String key = "DAOJFML27MZ6CJVWAFP3";
+		System.out.println(key.equals(WebClassConstant.STR_INTERFACE_KEY));
+		String token = "123";
+		String tokenS1 = StringEncrypt.encrypt(WebClassConstant.STR_INTERFACE_KEY, token);
+		System.out.println("tokenS1: "+tokenS1);
+		String token64DeS1De = StringEncrypt.decrypt(WebClassConstant.STR_INTERFACE_KEY, tokenS1);
+		System.out.println("token64DeS1De: "+token64DeS1De);
+		// ts
+		long ts = 1518334859265l;
+		System.out.println(new Timestamp(ts));
+		
+		// 105414
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("GroupID", "pukObhQFfsdfGiTHqA");
+		map.put("URLID", "105414-14970-1518330643");
+		try {
+			String webclassStr = JsonUtils.toJson(map);
+			String webclass = StringEncrypt.encrypt(WebClassConstant.STR_URL_ENCRYPT_KEY, webclassStr);
+			System.out.println("webclass:" + webclass);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

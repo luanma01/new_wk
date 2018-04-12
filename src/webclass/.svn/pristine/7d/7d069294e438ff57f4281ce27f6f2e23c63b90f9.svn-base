@@ -1,0 +1,77 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>test-wbs</title>
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			wbs连接地址: <input id="wbs-conn" type="text" ></input> 
+			<input name="ws" type="radio" value="1">wss
+			<input name="ws" type="radio" value="0" checked="checked">ws
+			<p></p>
+			send-data:<input id="wbs-send" type="text" ></input>
+			<p></p>
+			receive-data:<input id="wbs-receive" type="text"></input>
+			<p></p>
+			<button id="conn" class="btn btn-success" >connect websocket</button>
+			<button id="sendMsg" class="btn btn-primary" >send</button>
+		</div>
+	</div>
+
+</body>
+<script src="/js/common/jquery.min.js"></script>
+<script src="/js/common/bootstrap.min.js"></script>
+<script src="/js/common/layer/layer.js"></script>
+<script type="text/javascript">
+	var ws, ws_url;
+	//ws = new WebSocket("ws://10.45.172.102:5080");
+	// conn
+	$("#conn").click(function(){
+		var url = $("#wbs-conn").val();
+		if (url == "" || url == null) {
+			alert("please input correct url!");
+			return ;
+		}
+	 	var isWss=$('input:radio[name="ws"]:checked').val();
+		if (isWss == "1"){
+			ws_url = "wss://" + $("#wbs-conn").val();
+		} else {
+			ws_url = "ws://" + $("#wbs-conn").val();
+		}
+		ws = new WebSocket(ws_url);
+		ws.onopen = function(evt){
+			console.log("ws has been connected!");
+		}
+		ws.onerror = function(evt){
+			console.error("ws error: " + evt);
+		};
+		
+		ws.onmessage = function(e) { 
+			$("#wbs-receive").html("");
+			var msg = e.data;
+			console.log(msg);
+			$("#wbs-receive").val(msg);
+		}
+		ws.onclose = function(e) { 
+			console.log("ws has been closed!");
+		}
+	})
+	// send data
+	$("#sendMsg").click(function(){
+		if (ws) {
+			var data = $("#wbs-send").val();
+			ws.send(data);
+		} else {
+			console.log("ws did not init!");
+		}
+	})
+	
+	
+	
+</script>
+</html>

@@ -1,0 +1,127 @@
+package com.qiancloud.webclass.action;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.qiancloud.webclass.util.StringEncrypt;
+import com.qiancloud.webclass.util.WebClassConstant;
+
+@Controller
+@RequestMapping("/")
+public class TestController extends BaseController{
+	
+	private static final String LOCK = "LOCK";
+	private int count = 1;
+	
+	@RequestMapping(value="/test", method=RequestMethod.GET)
+	public ModelAndView goTest(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("/test");
+		if (count % 2 == 0) {
+			mv.addObject("uid", 628);
+		}else {
+			mv.addObject("uid", 629);
+		}
+		synchronized (LOCK) {
+			count ++;
+		}
+		System.out.println(count);
+		return mv;
+		
+	}
+	
+	@RequestMapping(value="/testIndex", method=RequestMethod.GET)
+	public ModelAndView goTestIndex(String id, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("/test-index");
+		String appId = "11f6429ce82e44c8889e860096d975ba";
+		mv.addObject("id", id);
+		mv.addObject("appId", appId);
+		return mv;
+	}
+	
+	@RequestMapping(value="/enterRoom", method=RequestMethod.POST)
+	public void enterRoom(String webclass, HttpServletRequest request, HttpServletResponse response) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		String token = "UserID=14970&UserType=2&RoomID=105414&UserName=web_test_学生";
+		token = StringEncrypt.encrypt(WebClassConstant.STR_INTERFACE_KEY, token);
+		map.put("Timestamp", 1517295552);
+		map.put("GroupID", "pukObhQFfsdfGiTHqA");
+		map.put("UserID", 14970);
+		map.put("UserType", 2);
+		map.put("UserName", "web_test_学生");
+		map.put("token", token);
+		Map<String, Object> roomMap = new HashMap<String, Object>();
+		roomMap.put("RoomID", 105414);
+		roomMap.put("RoomExID", "R_xZLJZEQuRwiG325vdjO4RQ");
+		roomMap.put("HostID", 14969);
+		roomMap.put("AttenderID", new int[]{14970});
+		roomMap.put("AssistantID", 0);
+		roomMap.put("RoomType", 1);
+		roomMap.put("RoomName", "test—1VS1");
+		roomMap.put("NeedPassword", false);
+		roomMap.put("Password", "");
+		map.put("RoomInfo", roomMap);
+		List<Map<String, Object>> fileList = new ArrayList<Map<String, Object>>();
+		Map<String, Object> fileMap1 = new HashMap<String, Object>();
+		Map<String, Object> fileMap2 = new HashMap<String, Object>();
+		Map<String, Object> fileMap3 = new HashMap<String, Object>();
+		Map<String, Object> fileMap4 = new HashMap<String, Object>();
+		Map<String, Object> fileMap5 = new HashMap<String, Object>();
+		Map<String, Object> fileMap6 = new HashMap<String, Object>();
+		fileMap1.put("FileID", 10009727);
+		fileMap1.put("PageNums", 4);
+		fileMap1.put("FileName", "考勤管理办法V1.0.pdf");
+		fileMap1.put("FileDir", "wQjcyovEJSakyRAKjC");
+		
+		fileMap2.put("FileID", 10009875);
+		fileMap2.put("PageNums", 1);
+		fileMap2.put("FileName", "测试要点.docx");
+		fileMap2.put("FileDir", "WaahgXGDKJUWYrSgxM");
+		
+		fileMap3.put("FileID", 10009880);
+		fileMap3.put("PageNums", 18);
+		fileMap3.put("FileName", "样本_如何激励学生.pptx");
+		fileMap3.put("FileDir", "lLPHWTNTGqfYdvKUJj");
+		
+		fileMap4.put("FileID", 10009880);
+		fileMap4.put("PageNums", 18);
+		fileMap4.put("FileName", "样本_如何激励学生4.pptx");
+		fileMap4.put("FileDir", "lLPHWTNTGqfYdvKUJj");
+		
+		fileMap5.put("FileID", 10009880);
+		fileMap5.put("PageNums", 18);
+		fileMap5.put("FileName", "样本_如何激励学生5.pptx");
+		fileMap5.put("FileDir", "lLPHWTNTGqfYdvKUJj");
+		
+		fileMap6.put("FileID", 10009875);
+		fileMap6.put("PageNums", 1);
+		fileMap6.put("FileName", "测试要点.docx");
+		fileMap6.put("FileDir", "WaahgXGDKJUWYrSgxM");
+		
+		fileList.add(fileMap1);
+		fileList.add(fileMap2);
+		fileList.add(fileMap3);
+		/*fileList.add(fileMap4);
+		fileList.add(fileMap5);
+		fileList.add(fileMap6);*/
+		
+		map.put("FileInfo", fileList);
+		map.put("success", true);
+		returnJsonData(map, response);
+	}
+	
+	@RequestMapping(value="/test-wbs", method=RequestMethod.GET)
+	public ModelAndView goTestWbs(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("/test-wbs");
+	}
+	
+}

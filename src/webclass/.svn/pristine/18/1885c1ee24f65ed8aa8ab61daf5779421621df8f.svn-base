@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .progress {
+            height: 30px;
+            width: 400px;
+            overflow: hidden;
+            position: relative;
+            background-color: gray;
+        }
+
+        .progress-bar {
+            position: absolute;
+            z-index:10;
+            left: 0;
+            height: 100%;
+            color: #fff;
+            width: 400px;
+            background-image: linear-gradient(90deg, transparent 50%, white 50%, white 100%);
+            background-size: 6px 40px;
+        }
+
+        .go{
+            position: absolute;
+            left:0;
+            z-index: 1;
+            width: 100px;
+            height: 100%;
+            background-color: #5cb85c;
+        }
+
+
+    </style >
+</head >
+
+<body>
+    <div class="progress"  >
+        <div class="go"></div>
+        <div class ="progress-bar">
+        </div >
+    </div >
+
+
+    <script src="../js/common/jquery.min.js"></script>
+    <script>
+        $(window).on("click",function(){
+            $('.go').hide();
+        })
+    </script>
+</body>
+
+</html >

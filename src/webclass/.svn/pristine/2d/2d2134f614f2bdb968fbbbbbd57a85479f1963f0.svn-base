@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
+        <title>talk 915</title>
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/main.css">
+    </head>
+    <body>
+        <div class="webclass">
+            <div class="main bd flex fl-col">
+                <div class="roominfo flex fl-between fl-align-c bg2">
+                    <div class="logo flex">
+                        <img src="../img/roominfo/LOGO.png" alt="logo">
+                    </div>
+                    <div class="room-title flex fl-center fl-align-c">
+                        <div class="roominfo-icon">
+                            <img src="../img/roominfo/title.png" alt="title">
+                        </div>
+                        <p>如何快速提高英语水平</p> &nbsp;/&nbsp;
+                        <p>08:00~10:00</p> &nbsp;/&nbsp;
+                        <p>教室号：<span>10086</span></p>
+                    </div>
+                    <div class="room-setting flex fl-end fl-align-c">
+                        <div class="roominfo-btn">
+                            服务器时间：<span>32:23:12</span>
+                        </div>
+                        <div class="roominfo-btn">
+                            <div class="roominfo-icon">  
+                                <img src="../img/roominfo/pause.png" alt="pause">
+                            </div>
+                            <a href="#">停止上课</a>
+                        </div>
+                        <div class="roominfo-btn">
+                            计时：<span>32:23:12</span>
+                        </div>
+                        <div class="roominfo-btn">
+                            <div class="roominfo-icon">
+                                <img src="../img/roominfo/setting.png" alt="setting">
+                            </div>
+                        <a href="#">设置</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="room-content flex">
+                    <div class="left bd flex fl-between">
+                        <div class="teach-area flex fl-col fl-between fl-align-c">
+                            <div class="top flex fl-end">
+                                <div class="top-do flex ">
+                                    <div class="top-reload">
+                                        <a href="#">刷新</a>
+                                    </div>
+                                    <div class="top-fit flex">
+                                        <span>适页</span>
+                                        <div>
+                                            <img src="../img/whiteboard/downlist.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="top-note">
+                                        <a href="#">备注</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="file-area"></div>
+                            <div class="bottom flex fl-end">
+                                <div class="bottom-count">
+                                    <span>12</span>
+                                    /
+                                    <span>12</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tool-area flex fl-col fl-align-c">
+                            <div>
+                                <div>
+                                    <img src="../img/toolbar/selFile.png" alt="">
+                                </div>
+                                <div>
+                                    <img src="../img/toolbar/uploadFile.png" alt="">
+                                </div>
+                            </div>
+                            <div class="toolbar">
+                                <div>
+                                    <img src="../img/toolbar/selPen.png" alt="">
+                                </div>
+                                <div>
+                                    <img src="../img/toolbar/selColor.png" alt="">
+                                </div>
+                                <div>
+                                    <img src="../img/toolbar/return.png" alt="">
+                                </div>
+                                <div>
+                                    <img src="../img/toolbar/go.png" alt="">
+                                </div>
+                                <div>
+                                    <img src="../img/toolbar/refresh.png" alt="">
+                                </div>
+                                <div>
+                                    <img src="../img/toolbar/rock.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right flex fl-col fl-align-c bd">
+                        <div class="video-pannel">
+                            <div class="video v1">
+                                <div></div>
+                                <div class="vd-info teacher flex fl-between fl-align-c">
+                                    <div class="flex fl-align-c">
+                                        <span>王老师</span>
+                                        <div class="vd-icon">
+                                            <img src="../img/right/micro.png" alt="">
+                                        </div>
+                                        <div class="vd-icon">
+                                            <img src="../img/right/video.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="flex fl-align-c">
+                                        <div class="vd-icon">
+                                            <img src="../img/right/zan.png" alt="">
+                                        </div>
+                                        <span>99</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="video v2">
+                                <div></div>
+                                <div class="vd-info student flex fl-between fl-align-c">
+                                    <div class="flex fl-align-c">
+                                        <span>未连接</span>
+                                        <div class="vd-icon">
+                                            <img src="../img/right/micro2.png" alt="">
+                                        </div>
+                                        <div class="vd-icon">
+                                            <img src="../img/right/video2.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="flex fl-align-c">
+                                        <div class="vd-icon">
+                                            <img src="../img/right/zan2.png" alt="">
+                                        </div>
+                                        <span>00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-pannel">
+                            <div class="chat-show bd"></div>
+                            <div class="chat-do bd">
+                                <div class="chat-ipt" contenteditable="true"></div>
+                                <div class="chat-send flex fl-between">
+                                    <div class="flex fl-align-c">
+                                        <div>
+                                            <img src="../img/right/smile.png" alt="">
+                                        </div>
+                                        <div>
+                                            <img src="../img/right/bubble.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div flex fl-align-c>
+                                        <div class="send-btn">发送</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../js/common/jquery.min.js"></script>
+        <script>
+                
+                    function fitScreen ()// 绑定到窗口的这个事件中
+                    {
+                        var whdef = 100/1920;// 表示1920的设计图,使用100PX的默认值
+                        var wH = window.innerHeight;// 当前窗口的高度
+                        var wW = window.innerWidth;// 当前窗口的宽度
+                        var rem = wW * whdef;// 以默认比例值乘以当前窗口宽度,得到该宽度下的相应FONT-SIZE值
+                        $('html').css('font-size', rem + "px");
+                    }
+                    fitScreen();
+                    $(window).resize(()=>fitScreen());
+                   
+            </script>
+    
+    </body>
+</html>

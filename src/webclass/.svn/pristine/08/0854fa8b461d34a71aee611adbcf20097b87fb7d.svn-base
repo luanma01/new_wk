@@ -1,0 +1,14 @@
+package com.qiancloud.webclass.util;
+
+public final class WebClassConstant {
+	
+	/** 接口  */
+	public static final String STR_INTERFACE_KEY = "DAOJFML27MZ6CJVWAFP3";
+
+	/** 后台管理系统  */
+	public static final String STR_CMS_KEY = "VQEO1RU34QLZ1A3QL06";
+
+	/** eclass协议  */
+	public static final String STR_URL_ENCRYPT_KEY = "f8b668aca4a50273a";
+	
+}

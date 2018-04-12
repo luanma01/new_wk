@@ -1,0 +1,50 @@
+package com.qiancloud.webclass.action;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.qiancloud.webclass.ext.agora.DynamicKey5;
+import com.qiancloud.webclass.util.Tools;
+
+@Controller
+@RequestMapping("/agoraAuth")
+public class AgoraAuthenticationController extends BaseController{
+	
+	/**
+	 * 使用 DynamicKey5 生成 channelKey 
+	 * 
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value="/getChannelKey5", method=RequestMethod.POST)
+	public void getChannelKey(HttpServletRequest request, HttpServletResponse response) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		String channel = request.getParameter("channel"); 
+		long uid = Tools.convertToLong(request.getParameter("uid"));
+		String appID = rb.getString("APP_ID");
+		String appCertificate = rb.getString("APP_CERTIFICATE");
+		int ts = (int) (new Date().getTime()/1000);
+		int salt = new Random().nextInt();
+		try {
+			String channelKey = DynamicKey5.generateMediaChannelKey(appID, appCertificate, channel, ts, salt, uid, 0);
+			map.put("Result", true);
+			map.put("ChannelKey", channelKey);
+		} catch (Exception e) {
+			map.put("Result", true);
+			map.put("error", e.getCause());
+			log.error("DynamicKey5 generator channelKey error! AppID: {}, channel: {}, uid: {}", appID, channel, uid, e);
+		}
+		returnJsonData(map, response);
+	}
+	
+}

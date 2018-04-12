@@ -1,0 +1,539 @@
+// state controller
+let state = {};
+
+    state.cvs_shape_color = "#000000";
+    state.cvs_fill_color = "transparent";
+    state.cvs_shape_size = "1";
+    state.cvs_font = "16px arial,sans-serif";
+    state.cvs_bgColor = "#ddd";
+    state.cvs_history = [];
+    state.cvs_step = -1;
+    state.cvs_command = 1;
+
+
+
+// draw anything
+(function(){
+    // init variable
+    let x,y,endX,endY,isMousePressed = false;
+
+    // get canvas
+    let file_box = $("#file-box");
+    let $cvs = $("#cvs");
+    let ctx=document.getElementById("cvs").getContext("2d");
+
+
+    // simulate line rectangle input dialog when you interact with the UI
+    let lineTip = file_box.appendLine({width:"1px",type:"solid",color:"red",beginX:0,beginY:0,endX:1,endY:1});
+    let rectTip = $("<div style='border:1px solid gray;width:1px;height:1px;position:absolute;display:none;'></div>");
+    let fontTip =$("<textarea rows='3' cols='20' style='background:transparent;position:absolute;display:none;'></textarea>");
+    file_box.append(rectTip);
+    file_box.append(fontTip);
+
+
+    /**
+     * Every function in this web has a corresponding command code:
+     * --------------------------------------------------
+     * function			command code		description
+     * --------------------------------------------------
+     * pencil  			        1				use it as a pencil to draw
+     * eraser					2				use it as a eraser to erase some spots
+     * clean					3 				you can clean the whole canvas
+     * draw line				4				draws straight lines
+     * draw rectangle			5				draw rectangles
+     * draw text				6				you can input text on the canvas
+     * draw circle              7               draw circle
+     * 
+     */
+
+
+    // Every function has different canvas context and cursor style
+    // therefore, we create a callback list to .....
+    // 1. switch the canvas context
+    // 2. switch the cursor style when the mouse is on the canvas
+    let commandCallbacks = $.Callbacks();
+    commandCallbacks.add(switchCanvasContext);
+    commandCallbacks.add(switchCursorStyle);
+
+
+    //TO DO:
+    // initUI();
+
+    // By default
+    commandCallbacks.fire(state.cvs_command);
+    historyPush();
+
+
+    // command emitter and tools interact
+    $(".toolbar li[data-info]").on("click",e=>{
+        let $that = $(e.currentTarget);
+        let type = $that.attr("data-info");
+            switch(type)
+            {
+                case "pencil"		:{state.cvs_command=1;break;}
+                case "eraser"		:{state.cvs_command=2;break;}
+                case "clean"		:{state.cvs_command=3;break;}
+                case "line"		    :{state.cvs_command=4;break;}
+                case "rectangle"	:{state.cvs_command=5;break;}
+                case "text"		    :{state.cvs_command=6;break;}
+                case "circle"		:{state.cvs_command=7;break;}
+                default 			:{state.cvs_command=1;}
+            }
+            //initialize canvas context and cursor style
+            commandCallbacks.fire(state.cvs_command);
+    });
+
+    $(".toolbar .tool-pen").on("click","li",e=>{
+        let $that = $(e.currentTarget);
+        let className = $that.children(0).attr("data-role");
+        $that.parent().prev().children(0).removeClass().addClass(className);
+    });
+
+    $(".toolbar .tool-color").on("click","li",e=>{
+        let $that = $(e.currentTarget);
+
+        // save cvs_shape_color
+        state.cvs_shape_color = $that.children(0).css("color");
+        $that.parent().prev().css('color',state.cvs_shape_color);
+
+        // update ctx
+        switchCanvasContext(state.cvs_command);
+    });
+
+    $(".toolbar .tool-clean").on("click","li",e=>{
+        let $that = $(e.currentTarget);
+        let className = $that.children(0).attr("data-role");
+        $that.parent().prev().children(0).removeClass().addClass(className);
+    });
+
+    $(".toolbar .tool-lock").on("click","span",e=>{
+        let $that = $(e.currentTarget);
+        let kw = $that.attr('data-role');
+        if(kw === "locked"){
+            $that.removeClass().addClass('icon-ICon-18');
+            $that.attr('data-role','unlock');
+        }else if(kw === "unlock"){
+            $that.removeClass().addClass('icon-ICon-12');
+            $that.attr('data-role','locked');
+        }
+    });
+
+
+
+    file_box.mousemove(mouseMoveEventHandler);
+
+    /**
+     * In different function circumstances, the Mouse Move Event should be handled in different behalf.
+     */
+    function mouseMoveEventHandler(e)
+    {
+        switch(state.cvs_command)
+        {
+            case 1	:	{	drawPencil(e);break;          }
+            case 2	:	{	drawPencil(e);break;          }
+            case 4	:	{   fakeLineInput(e);break;	        }
+            case 5	:	{   fakeRectangleInput(e);break;    }
+            case 6	:	{   fakeWordsInput(e);break;        }
+        }
+    }
+
+
+    file_box.mousedown(function(e){
+
+        isMousePressed=true;
+        
+        //set the begin path of the brash
+        let offset = $cvs.offset();
+        x = e.pageX-offset.left;
+        y = e.pageY-offset.top;
+
+    });
+
+    file_box.mouseup(mouseupEventHandler);
+    file_box.mouseleave(mouseupEventHandler);
+
+    function mouseupEventHandler(e)
+    {
+        if(isMousePressed)
+        {
+            // records operations history for undo or redo
+            switch(state.cvs_command)
+            {
+                case 1	:	{	historyPush();break; }
+                case 2	:	{	historyPush();break; }
+                case 4	:  	{   drawline();historyPush();break;}
+                case 5	:	{   drawRectangle();historyPush();break;}
+                case 6	:	{   fontTip.focus();break;}
+            }
+        }
+
+        isMousePressed=false;
+    }
+
+    fontTip.blur(function(){drawWords();historyPush();});
+
+
+    /**
+     * When you want to input some words on the canvas, the Input User Interface should be offered.
+     * you can drag a line on the canvas while  mouse button is pressed down
+     */
+    function fakeWordsInput(e)
+    {
+        let offset = $cvs.offset();
+        endX= e.pageX-offset.left;
+        endY  = e.pageY-offset.top;
+
+        let fontColor = state.cvs_shape_color;
+        let fontSize = state.cvs_font.split(" ")[0];
+        if(isMousePressed)
+        {
+            fontTip.show();
+            fontTip.css({
+                left:x,
+                top:y,
+                color: fontColor,
+                fontSize: fontSize,
+                padding: "0",
+                outline: "none"
+            });
+            fontTip.width(endX-x);
+            fontTip.height(endY-y);
+        }
+    }
+
+    
+    function fakeRectangleInput(e)
+    {
+        let offset = $cvs.offset();
+        endX = e.pageX-offset.left;
+        endY = e.pageY-offset.top;
+
+        let borderWidth  = state.cvs_shape_size;
+
+        if(isMousePressed)
+        {
+            rectTip.css({left:x,top:y});
+            rectTip.width(endX-x-borderWidth*2);
+            rectTip.height(endY-y-borderWidth*2);
+            // console.log(flag);
+            rectTip.show();
+
+        }
+    }
+
+
+    function fakeLineInput(e)
+    {
+        let offset = $cvs.offset();
+        endX = e.pageX-offset.left;
+        endY = e.pageY-offset.top;
+
+        if(isMousePressed)
+        {
+            lineTip.adjustLine({
+                beginX:x,
+                beginY:y,
+                endX:endX,
+                endY:endY,
+                parent:$cvs
+            });
+            lineTip.show();
+        }
+    }
+
+    
+    /**
+     * function: draw free line
+     * 
+     * @param command=1 --> pencil
+     * @param command=2 --> eraser
+     */
+    function drawPencil(e)
+    {
+        let offset = $cvs.offset();
+        let x = e.pageX-offset.left;
+        let y = e.pageY-offset.top;
+
+        //if the mouse button is pressed down,draw the mouse moving trace.
+        if(isMousePressed)
+        {
+            ctx.lineTo(x,y);
+            ctx.stroke();
+        }
+        else
+        {
+            // set the begin path for brash
+            ctx.beginPath();
+            ctx.moveTo(x,y);
+        }
+    }
+    
+    /**
+     * function: draw straight line
+     */
+    function drawline()
+    {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        ctx.lineTo(endX,endY);
+        ctx.stroke();
+        ctx.restore();
+
+        lineTip.hide();
+    }
+    
+    /**
+     * function: draw rectangle
+     */
+    function drawRectangle()
+    {
+        let borderWidth  = state.cvs_shape_size;
+        ctx.save();
+        ctx.fillRect(x+borderWidth*1,y+borderWidth*1,endX-x,endY-y);
+        ctx.strokeRect(x,y,endX-x,endY-y);
+        ctx.restore();
+
+        $cvs.focus();
+        rectTip.hide();
+    }
+
+    /**
+     * function: get angle
+     *
+     * @param {Number} deg --> rad
+     */
+    function getAngle(deg) {
+        return Math.PI * deg / 180;
+    }
+
+
+    /**
+     * function: draw circle
+     *
+     * @param x
+     * @param y
+     * @param radius
+     * @param startAngle
+     * @param endAngle
+     * @param anticlockwise  --  rotate direction
+     * @param isOnlyArc
+     * @param isFill
+     * @param color
+     */
+    function drawCircle(x, y, radius, startAngle, endAngle, anticlockwise, isOnlyArc = true, isFill = false, color) {
+        if (isFill) {
+            ctx.fillStyle = state.cvs_fill_color;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, radius, getAngle(startAngle), getAngle(endAngle), anticlockwise);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        } else {
+            ctx.strokeStyle = state.cvs_shape_color;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, radius, getAngle(startAngle), getAngle(endAngle), anticlockwise);
+            if (!isOnlyArc) {
+                ctx.closePath();
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+
+
+    /**
+     * function: draw words
+     */
+    function drawWords(e)
+    {
+        let words = fontTip.val().trim();
+        if(	fontTip.css("display")!= "none" && words )
+        {
+            let offset = $cvs.offset();
+            let offset2 = fontTip.offset();
+            let fontSize = state.cvs_font.split(" ")[0];
+            fontSize =fontSize.substring(0,fontSize.length-2);
+
+            ctx.font = state.cvs_font;
+            ctx.fillStyle =state.cvs_shape_color; // *fillStyle --> font-color
+            ctx.fillText(words,offset2.left-offset.left,(offset2.top-offset.top+fontSize*1));
+
+            fontTip.val("");
+        }
+        fontTip.hide();
+    }
+
+    /**
+     * clear canvas
+     */
+    function clearCanvas()
+    {
+        ctx.fillStyle= state.cvs_bgColor;
+        let width  = $cvs.attr("width");
+        let height  = $cvs.attr("height");
+        ctx.fillRect(0,0,width,height);
+    }
+
+
+    // undo redo
+    $("#tool_undo").click(undo);
+    $("#tool_redo").click(redo);
+
+    
+    /**
+     * function: undo
+     */
+    function undo()
+    {
+        if (state.cvs_step > 0)
+        {
+            clearCanvas();
+            state.cvs_step--;
+            let tempImage = new Image();
+            tempImage.src = state.cvs_history[state.cvs_step];
+            tempImage.onload = function () { ctx.drawImage(tempImage, 0, 0);};
+        }
+    }
+
+
+    /**
+     * function:  redo
+     */
+    function redo()
+    {
+        if (state.cvs_step <state.cvs_history.length-1)
+        {
+            clearCanvas();
+            state.cvs_step++;
+            let tempImage = new Image();
+            tempImage.src = state.cvs_history[state.cvs_step];
+            tempImage.onload = function () { ctx.drawImage(tempImage, 0, 0); };
+        }
+    }
+
+
+    // define function
+    function initUI()
+    {
+        // canvas 被拖动，重新设置画板大小（因为拖动是css效果，而实际画板大小是width 和height属性）				
+        $cvs.resizable({
+            stop:function(event,ui){
+                let height =  $cvs.height();
+                let width =$cvs.width();
+                $cvs.attr("width",width);
+                $cvs.attr("height",height);
+                //画板大小改变，画笔也会被初始化，这里将画笔复原
+                switchCanvasContext();
+            },
+            grid: [ 20, 10 ]
+        });
+    }
+
+
+
+    // $("#tools_save").click(saveItAsImage);
+
+    /**
+     * save canvas content as image
+     */
+    function saveItAsImage()
+    {
+        let image = $cvs.get(0).toDataURL("image/png").replace("image/png", "image/octet-stream");
+        //locally save
+        window.location.href=image;
+    }
+
+
+    /**
+     * put current canvas to cache
+     */
+    function historyPush()
+    {
+        state.cvs_step++;
+        if (state.cvs_step < state.cvs_history.length)
+        {
+            state.cvs_history.length = state.cvs_step;
+        }
+        state.cvs_history.push($cvs.get(0).toDataURL());
+    }
+
+
+    /**
+     * switch the canvas context for different command
+     */
+    function switchCanvasContext(command)
+    {
+        ctx.lineWidth = state.cvs_shape_size;
+        ctx.strokeStyle = state.cvs_shape_color;
+        ctx.lineCap = "round";
+        ctx.fillStyle =state.cvs_fill_color;
+
+        switch(state.cvs_command){
+            case 1: {
+                break;
+            }
+            case 2: {
+                ctx.strokeStyle = state.cvs_bgColor;
+                ctx.lineWidth = '32';
+                break;
+            }
+            case 3: {
+                clearCanvas();
+                $(".toolbar li[data-info='pencil']").trigger("click");
+                $(".toolbar li[data-info='pencil']").focus();
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+        return ctx;
+    }
+
+
+
+    /**
+     *  switch cursor style for different command
+     */
+    function switchCursorStyle(command)
+    {
+        switch(state.cvs_command){
+            case 1: {
+                $cvs.removeClass("cvs-eraser");
+                $cvs.removeClass("cvs-cross");
+                $cvs.removeClass("cvs-font");
+                $cvs.addClass("cvs-pencil");
+                break;
+            }
+            case 2: {
+                $cvs.removeClass("cvs-pencil");
+                $cvs.removeClass("cvs-font");
+                $cvs.removeClass("cvs-cross");
+                $cvs.addClass("cvs-eraser");
+                break;
+            }
+            case 6: {
+                $cvs.removeClass("cvs-eraser");
+                $cvs.removeClass("cvs-pencil");
+                $cvs.removeClass("cvs-cross");
+                $cvs.addClass("cvs-font");
+                break;
+            }
+            default:{
+                $cvs.removeClass("cvs-eraser");
+                $cvs.removeClass("cvs-font");
+                $cvs.removeClass("cvs-pencil");
+                $cvs.addClass("cvs-cross");
+                break;
+            }
+        }
+
+    }
+
+})();
+
+
+

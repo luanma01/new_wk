@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <canvas id="cvs"></canvas>
+
+    <ul style="display:inline-block;">
+        <li>
+            <button id="shape_pen"> pen </button>
+        </li>
+        <li>
+            <button id="shape_rect"> rect </button>
+        </li>
+    </ul>
+    <ul style="display:inline-block;">
+        <li>
+            <button id="undo"> undo </button>
+        </li>
+        <li>
+            <button id="redo"> redo </button>
+        </li>
+        <li>
+            <button id="clean"> clean </button>
+        </li>
+    </ul>
+
+    <script src="../js/common/jquery.min.js"></script>
+    <script src="../js/jcanvas.min.js"></script>
+    <script>
+        let $cvs = $("#cvs");
+        $cvs.get(0).width = 800;
+        $cvs.get(0).height = 600;
+        $cvs.css({
+            background: '#ccffcc',
+            cursor: 'crosshair',
+        });
+
+
+        let beginX,beginY,endX,endY,isMousePress=false,group,groups=[],step,shape='pen';
+
+        $cvs.on("mousedown",e=>{
+            beginX = e.offsetX;
+            beginY = e.offsetY;
+            isMousePress = true;
+            group =1+'_'+ setName();
+            groups.push(group);
+            step = groups.length - 1;
+        });
+
+        $cvs.on("mousemove",e=>{
+            if(isMousePress)
+            {
+                if(shape === 'pen')
+                {
+                    endX = e.offsetX;
+                    endY = e.offsetY;
+
+                    $cvs.drawLine({
+                        strokeStyle: '#000000',
+                        strokeWidth: 5,
+                        rounded: true,
+                        x1: beginX,
+                        y1: beginY,
+                        x2: endX,
+                        y2: endY,
+                        layer: true,
+                        groups: [group],
+                    });
+
+                    beginX = endX;
+                    beginY = endY;
+                }
+            }
+        });
+
+        $cvs.on("mouseup",e=>{
+            if(shape === 'rectangle')
+            {
+                endX = e.offsetX;
+                endY = e.offsetY;
+
+                let width = Math.abs(endX - beginX);
+                let height = Math.abs(endY - beginY);
+                let lf = endX - beginX > 0 ? beginX : endX;
+                let tp = endY - beginY > 0 ? beginY : endY;
+
+                $cvs.drawRect({
+                    strokeStyle: '#000000',
+                    strokeWidth: 3,
+                    x: lf,
+                    y: tp,
+                    width: width,
+                    height: height,
+                    fromCenter: false,
+                    layer: true,
+                    groups: [group],
+                });
+            }
+            isMousePress = false;
+
+        });
+
+        $("#undo").on("click",e=>{
+            if(step >= 0)
+            {
+                console.log('undo:'+step);
+                $cvs.setLayerGroup(groups[step],{visible: false}).drawLayers();
+                step--;
+            }
+        });
+        $("#redo").on("click",e=>{
+
+            if(step < groups.length - 1)
+            {
+                console.log('redo:' + step);
+                console.log(groups);
+                step++;
+                $cvs.setLayerGroup(groups[step],{visible: true}).drawLayers();
+            }
+        });
+        $("#clean").on("click",e=>{
+            $cvs.clearCanvas();
+        });
+
+        $("#shape_pen").on("click",e=>{
+            shape = 'pen';
+        });
+        $("#shape_rect").on("click",e=>{
+            shape = 'rectangle';
+        });
+
+        function setName(){
+            return parseInt(Math.random()*100000)
+        }
+    </script>
+</body>
+</html>

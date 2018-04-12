@@ -1,0 +1,131 @@
+
+package com.qiancloud.webclass.action;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.qiancloud.webclass.util.JsonUtils;
+
+@ServerEndpoint(value = "/ws")
+public class ChatAnnotation {
+
+    private static final Log log = LogFactory.getLog(ChatAnnotation.class);
+
+    private static final String GUEST_PREFIX = "Guest";
+    private static final AtomicInteger connectionIds = new AtomicInteger(0);
+    private static final Set<ChatAnnotation> connections =
+            new CopyOnWriteArraySet<>();
+
+    private final String nickname;
+    private Session session;
+
+    public ChatAnnotation() {
+        nickname = GUEST_PREFIX + connectionIds.getAndIncrement();
+    }
+
+
+    @OnOpen
+    public void start(Session session) {
+        this.session = session;
+        connections.add(this);
+        System.out.println(String.format("* %s %s", nickname, "has joined."));
+        Map<String, Object> respMap = new HashMap<String, Object>();
+    	Map<String, Object> dataMap = new HashMap<String, Object>();
+    	// int command = Tools.convertToInteger(map.get("command"));
+    	int command = 2016100;
+    	if (command == 2016100 || command == 2016102) {
+    		respMap.put("command", 2016200);
+    		respMap.put("errorcode", 0);
+    		dataMap.put("uid", 9999);
+    		dataMap.put("agname", "Web IM Agent");
+    		dataMap.put("orgname", "QianClass");
+    	} else if (command == 2016103) {
+    		respMap.put("command", 2016202);
+    		respMap.put("errorcode", 0);
+    		dataMap.put("gid", 10086);
+    		dataMap.put("agname", "Web IM Agent");
+    		dataMap.put("orgname", "QianClass");
+    		dataMap.put("usercount", 5);
+    		dataMap.put("userList", "");
+    	}
+    	respMap.put("data", dataMap);
+		try {
+			this.session.getBasicRemote().sendText(JsonUtils.toJson(respMap));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
+
+    @OnClose
+    public void end() {
+        connections.remove(this);
+        System.out.println(String.format("* %s %s",
+                nickname, "has disconnected."));
+    }
+
+    @OnMessage
+    public void incoming(String message) {
+        // Never trust the client
+        String filteredMessage = String.format("%s: %s",
+                nickname, message.toString());
+        try {
+        	System.out.println("msg: " + message);
+        	
+        	// Map map = JsonUtils.toBean(message, Map.class);
+        	Map<String, Object> respMap = new HashMap<String, Object>();
+        	Map<String, Object> dataMap = new HashMap<String, Object>();
+        	// int command = Tools.convertToInteger(map.get("command"));
+        	int command = 2016100;
+        	if (command == 2016100 || command == 2016102) {
+        		respMap.put("command", 2016200);
+        		respMap.put("errorcode", 0);
+        		dataMap.put("uid", 9999);
+        		dataMap.put("agname", "Web IM Agent");
+        		dataMap.put("orgname", "QianClass");
+        	} else if (command == 2016103) {
+        		respMap.put("command", 2016202);
+        		respMap.put("errorcode", 0);
+        		dataMap.put("gid", 10086);
+        		dataMap.put("agname", "Web IM Agent");
+        		dataMap.put("orgname", "QianClass");
+        		dataMap.put("usercount", 5);
+        		dataMap.put("userList", "");
+        	}
+        	respMap.put("data", dataMap);
+        	
+			this.session.getBasicRemote().sendText(JsonUtils.toJson(respMap));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
+
+
+
+    @OnError
+    public void onError(Throwable t) throws Throwable {
+        log.error("Chat Error: " + t.toString(), t);
+    }
+    
+}

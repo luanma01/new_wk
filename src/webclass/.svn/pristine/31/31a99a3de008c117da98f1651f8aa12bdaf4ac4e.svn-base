@@ -1,0 +1,13 @@
+### web-class properties ###
+## agora auth
+APP_ID=11f6429ce82e44c8889e860096d975ba
+APP_CERTIFICATE=e8f77406b49f4cdebc99c9305529b602
+## in api
+version=2.2
+# enter_room_command
+enterRoomCommand=http://eclassapi1.qiancloud.com/live/get_enterroom_command
+#enterRoomCommand=http://10.204.42.60:49211/live/get_enterroom_command
+# get file status
+getFileStatus=http://eclassapi1.qiancloud.com/live/usergetfilestatus
+# file domain
+fileDomain=https://eclassdoc1.qiancloud.com/
